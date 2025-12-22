@@ -23,20 +23,32 @@
 * [通用响应与错误](#通用响应与错误)
 * [测试准备](#测试准备)
 * [接口一览](#接口一览)
+  * [健康检查接口概览](#健康检查接口概览)
+  * [Feature 接口概览](#feature-接口概览)
+  * [Experiment 接口概览](#experiment-接口概览)
+  * [Variant 接口概览](#variant-接口概览)
+  * [Decision 接口概览](#decision-接口概览)
+  * [Audit 接口概览](#audit-接口概览)
 * [接口详情](#接口详情)
-  * [GET /health](#get-health)
-  * [POST /features](#post-features)
-  * [GET /features](#get-features)
-  * [GET /features/{feature_id}](#get-featuresfeature_id)
-  * [PATCH /features/{feature_id}](#patch-featuresfeature_id)
-  * [POST /features/{feature_id}/experiments](#post-featuresfeature_idexperiments)
-  * [GET /features/{feature_id}/experiments](#get-featuresfeature_idexperiments)
-  * [GET /experiments/{experiment_id}](#get-experimentsexperiment_id)
-  * [PATCH /experiments/{experiment_id}](#patch-experimentsexperiment_id)
-  * [POST /experiments/{experiment_id}/variants](#post-experimentsexperiment_idvariants)
-  * [GET /experiments/{experiment_id}/variants](#get-experimentsexperiment_idvariants)
-  * [POST /decisions](#post-decisions)
-  * [GET /audits](#get-audits)
+  * [健康检查接口](#健康检查接口)
+    * [GET /health](#get-health)
+  * [Feature 接口](#feature-接口)
+    * [POST /features](#post-features)
+    * [GET /features](#get-features)
+    * [GET /features/{feature_id}](#get-featuresfeature_id)
+    * [PATCH /features/{feature_id}](#patch-featuresfeature_id)
+  * [Experiment 接口](#experiment-接口)
+    * [POST /features/{feature_id}/experiments](#post-featuresfeature_idexperiments)
+    * [GET /features/{feature_id}/experiments](#get-featuresfeature_idexperiments)
+    * [GET /experiments/{experiment_id}](#get-experimentsexperiment_id)
+    * [PATCH /experiments/{experiment_id}](#patch-experimentsexperiment_id)
+  * [Variant 接口](#variant-接口)
+    * [POST /experiments/{experiment_id}/variants](#post-experimentsexperiment_idvariants)
+    * [GET /experiments/{experiment_id}/variants](#get-experimentsexperiment_idvariants)
+  * [Decision 接口](#decision-接口)
+    * [POST /decisions](#post-decisions)
+  * [Audit 接口](#audit-接口)
+    * [GET /audits](#get-audits)
 * [已知限制](#已知限制)
 
 <!-- vim-markdown-toc -->
@@ -90,25 +102,49 @@ BASE_URL=http://localhost:6789
 ```
 
 ## 接口一览
+
+### 健康检查接口概览
 | Method | Path | 说明 |
 | --- | --- | --- |
 | GET | /health | 健康检查 |
+
+### Feature 接口概览
+| Method | Path | 说明 |
+| --- | --- | --- |
 | POST | /features | 创建 Feature |
 | GET | /features | Feature 列表 |
 | GET | /features/{feature_id} | 获取 Feature |
 | PATCH | /features/{feature_id} | 更新 Feature |
+
+### Experiment 接口概览
+| Method | Path | 说明 |
+| --- | --- | --- |
 | POST | /features/{feature_id}/experiments | 创建 Experiment |
 | GET | /features/{feature_id}/experiments | Feature 下的 Experiments |
 | GET | /experiments/{experiment_id} | 获取 Experiment |
 | PATCH | /experiments/{experiment_id} | 更新 Experiment |
+
+### Variant 接口概览
+| Method | Path | 说明 |
+| --- | --- | --- |
 | POST | /experiments/{experiment_id}/variants | 创建 Variant |
 | GET | /experiments/{experiment_id}/variants | Variant 列表 |
+
+### Decision 接口概览
+| Method | Path | 说明 |
+| --- | --- | --- |
 | POST | /decisions | 计算分流结果 |
+
+### Audit 接口概览
+| Method | Path | 说明 |
+| --- | --- | --- |
 | GET | /audits | 审计查询（stub） |
 
 ## 接口详情
 
-### GET /health
+### 健康检查接口
+
+#### GET /health
 健康检查。
 
 curl:
@@ -121,7 +157,9 @@ curl -sS "$BASE_URL/health"
 {"status":"ok"}
 ```
 
-### POST /features
+### Feature 接口
+
+#### POST /features
 创建 Feature。
 
 请求体:
@@ -141,7 +179,7 @@ curl -sS -X POST "$BASE_URL/features" \
 {"id":"feat-001","key":"new_checkout","name":"New Checkout","status":"off","active_experiment_id":null}
 ```
 
-### GET /features
+#### GET /features
 获取 Feature 列表。
 
 curl:
@@ -156,7 +194,7 @@ curl -sS "$BASE_URL/features"
 ]
 ```
 
-### GET /features/{feature_id}
+#### GET /features/{feature_id}
 获取单个 Feature。
 
 路径参数:
@@ -172,7 +210,7 @@ curl -sS "$BASE_URL/features/feat-001"
 {"id":"feat-001","key":"new_checkout","name":"New Checkout","status":"off","active_experiment_id":null}
 ```
 
-### PATCH /features/{feature_id}
+#### PATCH /features/{feature_id}
 更新 Feature 状态与激活实验。
 
 请求体:
@@ -192,7 +230,9 @@ curl -sS -X PATCH "$BASE_URL/features/feat-001" \
 {"id":"feat-001","key":"new_checkout","name":"New Checkout","status":"experiment","active_experiment_id":"exp-001"}
 ```
 
-### POST /features/{feature_id}/experiments
+### Experiment 接口
+
+#### POST /features/{feature_id}/experiments
 在 Feature 下创建 Experiment。
 
 请求体:
@@ -212,7 +252,7 @@ curl -sS -X POST "$BASE_URL/features/feat-001/experiments" \
 {"id":"exp-001","feature_id":"feat-001","name":"checkout-test","seed":"2024q4","status":"draft","rollout_percent":50}
 ```
 
-### GET /features/{feature_id}/experiments
+#### GET /features/{feature_id}/experiments
 获取某 Feature 下的 Experiment 列表。
 
 curl:
@@ -227,7 +267,7 @@ curl -sS "$BASE_URL/features/feat-001/experiments"
 ]
 ```
 
-### GET /experiments/{experiment_id}
+#### GET /experiments/{experiment_id}
 获取 Experiment 详情。
 
 curl:
@@ -240,7 +280,7 @@ curl -sS "$BASE_URL/experiments/exp-001"
 {"id":"exp-001","feature_id":"feat-001","name":"checkout-test","seed":"2024q4","status":"draft","rollout_percent":50}
 ```
 
-### PATCH /experiments/{experiment_id}
+#### PATCH /experiments/{experiment_id}
 更新 Experiment。
 
 请求体（字段可选）:
@@ -260,7 +300,9 @@ curl -sS -X PATCH "$BASE_URL/experiments/exp-001" \
 {"id":"exp-001","feature_id":"feat-001","name":"checkout-test","seed":"2024q4","status":"running","rollout_percent":50}
 ```
 
-### POST /experiments/{experiment_id}/variants
+### Variant 接口
+
+#### POST /experiments/{experiment_id}/variants
 创建 Variant。
 
 请求体:
@@ -280,7 +322,7 @@ curl -sS -X POST "$BASE_URL/experiments/exp-001/variants" \
 {"id":"var-001","experiment_id":"exp-001","key":"control","weight":50,"is_control":true,"payload":{}}
 ```
 
-### GET /experiments/{experiment_id}/variants
+#### GET /experiments/{experiment_id}/variants
 获取 Variant 列表。
 
 curl:
@@ -295,7 +337,9 @@ curl -sS "$BASE_URL/experiments/exp-001/variants"
 ]
 ```
 
-### POST /decisions
+### Decision 接口
+
+#### POST /decisions
 计算分流结果。
 
 请求体:
@@ -321,7 +365,9 @@ curl -sS -X POST "$BASE_URL/decisions" \
 {"request_id":"req-001","feature_key":"new_checkout","experiment_id":"exp-001","variant_key":"control","variant_payload":{},"reason":"assigned"}
 ```
 
-### GET /audits
+### Audit 接口
+
+#### GET /audits
 审计查询（当前为 stub）。
 
 查询参数:
