@@ -132,3 +132,23 @@ Append-only.
   body: 加入后端工程师角色，负责业务逻辑实现，与 engineer-01 协作（对方负责接口 mock）。
   status: noted
   relates: []
+
+- timestamp: 2025-12-22T18:13:42+08:00
+  from: ai/backend/engineer-01
+  thread: backend-db-migration
+  type: update
+  priority: P1
+  body: |
+    交付物:
+    - 在 `pyapp/migration/env.py` 配置独立版本表 `feature_alembic_version` 并增加 include_object 过滤，仅保留 features/experiments/variants/decisions，避免误删其他项目表。
+    - 识别 ORM 模型问题: Column 参数拼写错误、FK 表名错误、relationship 类名拼写错误，导致 autogenerate/import 失败。
+    - 给出 datetime UTC 时区告警与 SQLAlchemy 2.x 导入变更的修复建议，以及 pymysql 驱动缺失提示。
+    风险:
+    - 现有自动生成的迁移包含 drop_table 其他项目表，需丢弃并在过滤后重生成。
+    - 多项目共享库若未统一 version_table，仍可能出现版本冲突。
+    下一步:
+    - 修复 `pyapp/repositories/db/models.py` 里的拼写/引用错误，修 `pyapp/repositories/db/init.py` 类型导入，安装 pymysql 后重新 autogenerate。
+    需要支持:
+    - 确认允许修复 models/init 文件，并确认最终版本表名称（当前为 feature_alembic_version）。
+  status: open
+  relates: ["pyapp/migration/env.py"]

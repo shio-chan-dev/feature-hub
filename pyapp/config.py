@@ -25,6 +25,12 @@ if ENV_EXIST:
 else:
     print("环境变量加载失败")
 
+#############
+# DATA_DIR
+############
+
+DATA_DIR = ROOT_PATH / "data"
+
 #####################
 # Log Path
 #####################
