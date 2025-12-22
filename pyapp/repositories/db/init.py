@@ -7,9 +7,9 @@ import logging
 from contextlib import contextmanager
 from typing import Any, Optional
 
-from sqlalchemy import Dialect, create_engine, types
+from sqlalchemy import create_engine, types
 from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
-from sqlalchemy.sql.type_api import _T
+from sqlalchemy.engine import Dialect
 
 from config import DATA_DIR, DATABASE_HOST, DATABASE_NAME, DATABASE_PASSWORD, DATABASE_USER, DB_TYPE
 
@@ -19,10 +19,10 @@ class JSONField(types.TypeDecorator):
     impl = types.Text
     cache_ok = True
 
-    def process_bind_param(self, value: Optional[_T], dialect: Dialect) -> Any:
+    def process_bind_param(self, value: Optional[Any], dialect: Dialect) -> Any:
         return json.dumps(value)
 
-    def process_result_value(self, value: Optional[_T], dialect: Dialect) -> Any:
+    def process_result_value(self, value: Optional[Any], dialect: Dialect) -> Any:
         if value is not None:
             return json.loads(value)
 
