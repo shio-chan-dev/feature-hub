@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from router import audits, decisions, experiment, feature, variant
+from utils.logger import logger
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Feature Hub API", version="0.1.0")
