@@ -36,3 +36,28 @@ Append-only.
     - Open questions: targeting format, audit log fields/source, bucket key (layer_id?), log retention
   status: open
   relates: []
+
+- timestamp: 2025-12-22T17:55:00+08:00
+  from: ai/frontend/rep-01
+  thread: feature-hub-ui
+  type: update
+  priority: P1
+  body: |
+    Deliverables:
+    - SvelteKit UI implemented: Features dashboard, Feature detail (experiments + variants), Audits, Decisions playground.
+    - Unified Header + global layout/theme + motion/a11y polish.
+    - Server loads/actions wired to API contract; centralized api client + types.
+    - Fixed Svelte 5 runes mode ($derived) and CSS @import ordering (fonts moved to <head>).
+
+    Risks:
+    - Google Fonts served via external URL; if blocked, typography will fall back.
+    - API base defaults to http://localhost:6789; ensure backend is running or set API_BASE_URL.
+
+    Next steps:
+    - Run dev server, smoke test flows: create feature -> create experiment -> add variants -> set status -> decision.
+    - Validate audits page once backend stub is replaced.
+
+    Support needed:
+    - Confirm API availability/port, and any env var standard for API_BASE_URL.
+  status: open
+  relates: []
