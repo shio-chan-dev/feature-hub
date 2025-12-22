@@ -25,12 +25,22 @@ def decide(payload: DecisionRequest):
                 payload.user_id,
                 context,
                 )
+        if isinstance(result, dict):
+            request_id = result.get("request_id")
+            feature_key = result.get("feature_key")
+            experiment_id = result.get("experiment_id")
+            variant_key = result.get("variant_key")
+        else:
+            request_id = result.request_id
+            feature_key = result.feature_key
+            experiment_id = result.experiment_id
+            variant_key = result.variant_key
         logger.info(
                 "[router.dec] decide success request_id=%s feature_key=%s experiment_id=%s variant_key=%s",
-                result.request_id,
-                result.feature_key,
-                result.experiment_id,
-                result.variant_key,
+                request_id,
+                feature_key,
+                experiment_id,
+                variant_key,
                 )
         return result
     except Exception as e:
