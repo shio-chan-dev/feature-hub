@@ -245,6 +245,50 @@
 						</table>
 					{/if}
 				</div>
+				{#if data.variants.length > 0}
+					<div class="panel">
+						<form method="POST" action="?/updateVariant" class="form-grid">
+							<label>
+								{copy.featureDetail.variantUpdateForm.variant}
+								<select name="variant_id" required>
+									<option value="">{copy.common.noneSelected}</option>
+									{#each data.variants as variant}
+										<option value={variant.id}>{variant.key} ({variant.id})</option>
+									{/each}
+								</select>
+							</label>
+							<label>
+								{copy.featureDetail.variantForm.weight}
+								<input type="number" name="weight" min="0" placeholder="50" />
+							</label>
+							<label>
+								{copy.featureDetail.variantForm.control}
+								<select name="is_control">
+									<option value="">{copy.featureDetail.variantUpdateForm.keep}</option>
+									<option value="true">{copy.common.yes}</option>
+									<option value="false">{copy.common.no}</option>
+								</select>
+							</label>
+							<label>
+								{copy.featureDetail.variantForm.payload}
+								<textarea name="payload" placeholder={payloadPlaceholder}></textarea>
+							</label>
+							<div class="form-actions">
+								<button class="button primary" type="submit">
+									{copy.featureDetail.variantUpdateForm.submit}
+								</button>
+								<span class="helper">{copy.featureDetail.variantUpdateForm.helper}</span>
+							</div>
+						</form>
+						{#if form?.action === 'updateVariant'}
+							{#if form?.error}
+								<p class="banner error" role="alert">{form.error}</p>
+							{:else if form?.success}
+								<p class="banner success">{copy.messages.variantUpdated}</p>
+							{/if}
+						{/if}
+					</div>
+				{/if}
 				<div class="panel">
 					<form method="POST" action="?/createVariant" class="form-grid">
 						<input type="hidden" name="experiment_id" value={data.selectedExperiment.id} />

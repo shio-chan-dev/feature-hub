@@ -53,6 +53,7 @@ export const translations = {
 			experimentCreated: 'Experiment created.',
 			experimentUpdated: 'Experiment updated.',
 			variantAdded: 'Variant added.',
+			variantUpdated: 'Variant updated.',
 			decisionResolved: 'Decision resolved.'
 		},
 		features: {
@@ -123,6 +124,12 @@ export const translations = {
 				control: 'Control',
 				add: 'Add variant',
 				helper: 'Control is required for safe fallback.'
+			},
+			variantUpdateForm: {
+				variant: 'Variant',
+				keep: 'Keep current',
+				submit: 'Update variant',
+				helper: 'Leave blank to keep existing values.'
 			}
 		},
 		audits: {
@@ -276,6 +283,7 @@ export const translations = {
 			experimentCreated: '实验已创建。',
 			experimentUpdated: '实验已更新。',
 			variantAdded: '变体已添加。',
+			variantUpdated: '变体已更新。',
 			decisionResolved: '决策已生成。'
 		},
 		features: {
@@ -345,6 +353,12 @@ export const translations = {
 				control: '对照',
 				add: '添加变体',
 				helper: '需要对照变体以保证回退。'
+			},
+			variantUpdateForm: {
+				variant: '变体',
+				keep: '保持不变',
+				submit: '更新变体',
+				helper: '留空则保持当前值。'
 			}
 		},
 		audits: {
