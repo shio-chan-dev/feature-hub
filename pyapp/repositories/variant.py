@@ -7,6 +7,7 @@ from sqlalchemy import select
 from domain.variant import Variant
 from repositories.db.models import VariantORM
 from repositories.db.init import get_db
+from utils.errors import NotFoundError
 from utils.logger import logger
 from utils.misc import new_id
 
@@ -101,6 +102,26 @@ class VariantTable(BaseVariantTable):
             )
             raise
 
+    def get(self, variant_id: str) -> Variant:
+        logger.info("[repo.var] get varaint from database variant_id=%s", variant_id)
+        with get_db() as db:
+            orm = db.get(VariantORM, variant_id)
+            if not orm:
+                raise NotFoundError("variant not found")
+            logger.info("[repo.var] get variant from database success")
+            return _to_domain(orm)
+
+    def update(self, variant: Variant) -> Variant:
+        with get_db() as db:
+            orm = db.get(VariantORM, variant.id)
+            if not orm:
+                raise NotFoundError("variant not found")
+            orm.weight = variant.weight
+            orm.is_control = variant.is_control
+            orm.payload = dict(variant.payload)
+            db.commit()
+            db.refresh(orm)
+            return _to_domain(orm)
 
 def _to_domain(orm: VariantORM) -> Variant:
     return Variant(
