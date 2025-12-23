@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from typing import Any, Optional
 
 from sqlalchemy import create_engine, types
-from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.engine import Dialect
 
 from config import DATA_DIR, DATABASE_HOST, DATABASE_NAME, DATABASE_PASSWORD, DATABASE_USER, DB_TYPE
@@ -20,7 +20,9 @@ class JSONField(types.TypeDecorator):
     cache_ok = True
 
     def process_bind_param(self, value: Optional[Any], dialect: Dialect) -> Any:
-        return json.dumps(value)
+        if value is None:
+            return None
+        return json.dumps(value, ensure_ascii=False)
 
     def process_result_value(self, value: Optional[Any], dialect: Dialect) -> Any:
         if value is not None:
@@ -40,14 +42,20 @@ else:
     DATABASE_URL = os.getenv("SQLITE_URL", f"sqlite:///{str(DATA_DIR)}/test.db")
 
 
-engine = create_engine(DATABASE_URL, json_serializer=lambda obj: json.dumps(obj,ensure_ascii=False))
+engine = create_engine(
+        DATABASE_URL, 
+        pool_pre_ping=True,
+        pool_recycle=3600,
+        json_serializer=lambda obj: json.dumps(obj,ensure_ascii=False),
+        )
 
 SessionLocal = sessionmaker(
-        autocommit=False, autoflush=False, bind=engine, expire_on_commit=False
+        autoflush=False, 
+        bind=engine, 
+        expire_on_commit=False
         )
 
 Base = declarative_base()
-Session = scoped_session(SessionLocal)
 
 def get_session():
     db = SessionLocal()
