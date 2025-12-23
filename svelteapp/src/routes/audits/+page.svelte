@@ -48,27 +48,35 @@
 		{:else if data.audits.length === 0}
 			<div class="panel">
 				<p>{copy.audits.emptyState}</p>
-				<p class="subtle">{copy.audits.stubHint}</p>
 			</div>
 		{:else}
 			<div class="panel">
 				<table class="table">
 					<thead>
 						<tr>
-							<th>{copy.audits.table.timestamp}</th>
-							<th>{copy.audits.table.actor}</th>
-							<th>{copy.audits.table.action}</th>
-							<th>{copy.audits.table.diff}</th>
+							<th>{copy.audits.table.decidedAt}</th>
+							<th>{copy.audits.table.requestId}</th>
+							<th>{copy.audits.table.userId}</th>
+							<th>{copy.audits.table.variant}</th>
+							<th>{copy.audits.table.reason}</th>
+							<th>{copy.audits.table.payload}</th>
 						</tr>
 					</thead>
 					<tbody>
 						{#each data.audits as entry}
 							<tr>
-								<td>{entry.timestamp}</td>
-								<td>{entry.actor}</td>
-								<td>{entry.action}</td>
+								<td>{entry.decided_at}</td>
+								<td>{entry.request_id}</td>
+								<td>{entry.user_id}</td>
 								<td>
-									<code>{JSON.stringify(entry.diff)}</code>
+									<div>{entry.variant_key}</div>
+									{#if entry.experiment_id}
+										<div class="subtle">exp: {entry.experiment_id}</div>
+									{/if}
+								</td>
+								<td>{entry.reason}</td>
+								<td>
+									<code>{JSON.stringify(entry.variant_payload)}</code>
 								</td>
 							</tr>
 						{/each}

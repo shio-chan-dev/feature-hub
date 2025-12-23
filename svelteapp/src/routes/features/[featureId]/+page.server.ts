@@ -86,6 +86,7 @@ export const load: PageServerLoad = async ({ fetch, params, url }) => {
 export const actions: Actions = {
 	updateFeature: async ({ request, fetch, params }) => {
 		const formData = await request.formData();
+		const nameValue = parseString(formData.get('name'));
 		const statusValue = parseString(formData.get('status'));
 		const activeExperimentValue = parseString(formData.get('active_experiment_id'));
 
@@ -96,10 +97,18 @@ export const actions: Actions = {
 			});
 		}
 
+		if (statusValue === 'experiment' && !activeExperimentValue) {
+			return fail(400, {
+				action: 'updateFeature',
+				error: 'Active experiment is required for experiment status.'
+			});
+		}
+
 		try {
 			const payload = {
+				name: nameValue || undefined,
 				status: statusValue,
-				active_experiment_id: activeExperimentValue || null
+				active_experiment_id: statusValue === 'experiment' ? activeExperimentValue : null
 			};
 
 			const feature = await apiRequest<Feature>(fetch, `/features/${params.featureId}`, {
@@ -170,6 +179,7 @@ export const actions: Actions = {
 	updateExperiment: async ({ request, fetch }) => {
 		const formData = await request.formData();
 		const experimentId = parseString(formData.get('experiment_id'));
+		const nameValue = parseString(formData.get('name'));
 		const statusValue = parseString(formData.get('status'));
 		const seedValue = parseString(formData.get('seed'));
 		const rolloutValue = parseNumber(formData.get('rollout_percent'));
@@ -199,6 +209,7 @@ export const actions: Actions = {
 
 		try {
 			const payload = {
+				name: nameValue || undefined,
 				status: statusValue || undefined,
 				seed: seedValue || undefined,
 				rollout_percent: rolloutValue ?? undefined

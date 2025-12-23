@@ -37,11 +37,16 @@ export type DecisionResponse = {
 };
 
 export type AuditItem = {
-	timestamp: string;
-	actor: string;
+	id: string;
+	request_id: string;
+	feature_id: string;
 	feature_key: string;
-	action: string;
-	diff: Record<string, unknown>;
+	experiment_id: string | null;
+	user_id: string;
+	variant_key: string;
+	variant_payload: Record<string, unknown>;
+	reason: string;
+	decided_at: string;
 };
 
 export type AuditList = {

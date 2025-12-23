@@ -36,6 +36,10 @@
 			<div class="panel">
 				<form method="POST" action="?/updateFeature" class="form-grid">
 					<label>
+						{copy.featureDetail.nameLabel}
+						<input name="name" value={data.feature?.name ?? ''} />
+					</label>
+					<label>
 						{copy.featureDetail.statusLabel}
 						<select name="status" required>
 							<option value="off" selected={data.feature.status === 'off'}>
@@ -148,6 +152,10 @@
 							<form method="POST" action="?/updateExperiment" class="form-grid">
 								<input type="hidden" name="experiment_id" value={experiment.id} />
 								<label>
+									{copy.featureDetail.experimentForm.name}
+									<input name="name" value={experiment.name} />
+								</label>
+								<label>
 									{copy.featureDetail.statusLabel}
 									<select name="status">
 										<option value="draft" selected={experiment.status === 'draft'}>
@@ -221,74 +229,65 @@
 					{#if data.variants.length === 0}
 						<p>{copy.featureDetail.noVariants}</p>
 					{:else}
-						<table class="table">
-							<thead>
-								<tr>
-									<th>{copy.featureDetail.variantTable.key}</th>
-									<th>{copy.featureDetail.variantTable.weight}</th>
-									<th>{copy.featureDetail.variantTable.control}</th>
-									<th>{copy.featureDetail.variantTable.payload}</th>
-								</tr>
-							</thead>
-							<tbody>
-								{#each data.variants as variant}
-									<tr>
-										<td>{variant.key}</td>
-										<td>{variant.weight}</td>
-										<td>{variant.is_control ? copy.common.yes : copy.common.no}</td>
-										<td>
-											<code>{JSON.stringify(variant.payload)}</code>
-										</td>
-									</tr>
-								{/each}
-							</tbody>
-						</table>
+						<div class="feature-grid">
+							{#each data.variants as variant, index}
+								<article class="card reveal" style={`--delay: ${index * 0.04}s`}>
+									<header>
+										<div>
+											<div class="card-title">{variant.key}</div>
+											<div class="card-meta">{variant.id}</div>
+										</div>
+										{#if variant.is_control}
+											<span class="badge">{copy.featureDetail.variantForm.control}</span>
+										{/if}
+									</header>
+									<div class="card-meta">
+										{copy.featureDetail.variantTable.weight}: {variant.weight}
+									</div>
+									<div class="card-meta">
+										{copy.featureDetail.variantTable.payload}:
+										<code>{JSON.stringify(variant.payload)}</code>
+									</div>
+									<form method="POST" action="?/updateVariant" class="form-grid">
+										<input type="hidden" name="variant_id" value={variant.id} />
+										<label>
+											{copy.featureDetail.variantForm.weight}
+											<input type="number" name="weight" min="0" value={variant.weight} />
+										</label>
+										<label>
+											{copy.featureDetail.variantForm.control}
+											<select name="is_control">
+												<option value="true" selected={variant.is_control}>
+													{copy.common.yes}
+												</option>
+												<option value="false" selected={!variant.is_control}>
+													{copy.common.no}
+												</option>
+											</select>
+										</label>
+										<label>
+											{copy.featureDetail.variantForm.payload}
+											<textarea name="payload">{JSON.stringify(variant.payload, null, 2)}</textarea>
+										</label>
+										<div class="form-actions">
+											<button class="button primary" type="submit">
+												{copy.featureDetail.variantUpdateForm.submit}
+											</button>
+											<span class="helper">{copy.featureDetail.variantUpdateForm.helper}</span>
+										</div>
+									</form>
+									{#if form?.action === 'updateVariant' && form?.variantId === variant.id}
+										{#if form?.error}
+											<p class="banner error" role="alert">{form.error}</p>
+										{:else if form?.success}
+											<p class="banner success">{copy.messages.variantUpdated}</p>
+										{/if}
+									{/if}
+								</article>
+							{/each}
+						</div>
 					{/if}
 				</div>
-				{#if data.variants.length > 0}
-					<div class="panel">
-						<form method="POST" action="?/updateVariant" class="form-grid">
-							<label>
-								{copy.featureDetail.variantUpdateForm.variant}
-								<select name="variant_id" required>
-									<option value="">{copy.common.noneSelected}</option>
-									{#each data.variants as variant}
-										<option value={variant.id}>{variant.key} ({variant.id})</option>
-									{/each}
-								</select>
-							</label>
-							<label>
-								{copy.featureDetail.variantForm.weight}
-								<input type="number" name="weight" min="0" placeholder="50" />
-							</label>
-							<label>
-								{copy.featureDetail.variantForm.control}
-								<select name="is_control">
-									<option value="">{copy.featureDetail.variantUpdateForm.keep}</option>
-									<option value="true">{copy.common.yes}</option>
-									<option value="false">{copy.common.no}</option>
-								</select>
-							</label>
-							<label>
-								{copy.featureDetail.variantForm.payload}
-								<textarea name="payload" placeholder={payloadPlaceholder}></textarea>
-							</label>
-							<div class="form-actions">
-								<button class="button primary" type="submit">
-									{copy.featureDetail.variantUpdateForm.submit}
-								</button>
-								<span class="helper">{copy.featureDetail.variantUpdateForm.helper}</span>
-							</div>
-						</form>
-						{#if form?.action === 'updateVariant'}
-							{#if form?.error}
-								<p class="banner error" role="alert">{form.error}</p>
-							{:else if form?.success}
-								<p class="banner success">{copy.messages.variantUpdated}</p>
-							{/if}
-						{/if}
-					</div>
-				{/if}
 				<div class="panel">
 					<form method="POST" action="?/createVariant" class="form-grid">
 						<input type="hidden" name="experiment_id" value={data.selectedExperiment.id} />

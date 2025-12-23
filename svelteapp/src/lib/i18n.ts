@@ -85,6 +85,7 @@ export const translations = {
 		featureDetail: {
 			titleFallback: 'Feature detail',
 			keyLabel: 'Key',
+			nameLabel: 'Name',
 			idLabel: 'ID',
 			statusTitle: 'Feature status',
 			statusLabel: 'Status',
@@ -129,13 +130,13 @@ export const translations = {
 				variant: 'Variant',
 				keep: 'Keep current',
 				submit: 'Update variant',
-				helper: 'Leave blank to keep existing values.'
+				helper: 'Adjust weight, control, or payload (valid JSON).'
 			}
 		},
 		audits: {
 			title: 'Audit log',
 			lead:
-				'Track configuration changes across features. Provide a feature ID to view audit entries.',
+				'Review decision audits for a feature. Provide a feature ID to view recent entries.',
 			form: {
 				featureId: 'Feature ID',
 				limit: 'Limit',
@@ -145,12 +146,13 @@ export const translations = {
 			featureLabel: 'Feature',
 			prompt: 'Enter a feature ID to view audit history.',
 			emptyState: 'No audit entries yet for this feature.',
-			stubHint: 'The backend currently returns an empty list (stub).',
 			table: {
-				timestamp: 'Timestamp',
-				actor: 'Actor',
-				action: 'Action',
-				diff: 'Diff'
+				decidedAt: 'Decided at',
+				requestId: 'Request ID',
+				userId: 'User ID',
+				variant: 'Variant',
+				reason: 'Reason',
+				payload: 'Payload'
 			},
 			nextPage: 'Next page'
 		},
@@ -314,6 +316,7 @@ export const translations = {
 		featureDetail: {
 			titleFallback: '功能详情',
 			keyLabel: '键值',
+			nameLabel: '名称',
 			idLabel: 'ID',
 			statusTitle: '功能状态',
 			statusLabel: '状态',
@@ -358,12 +361,12 @@ export const translations = {
 				variant: '变体',
 				keep: '保持不变',
 				submit: '更新变体',
-				helper: '留空则保持当前值。'
+				helper: '更新权重/对照/载荷（需为合法 JSON）。'
 			}
 		},
 		audits: {
 			title: '审计日志',
-			lead: '跟踪功能配置变更。输入 Feature ID 查看审计记录。',
+			lead: '查看某个功能的决策审计记录。输入 Feature ID 获取最新记录。',
 			form: {
 				featureId: 'Feature ID',
 				limit: '条数',
@@ -373,12 +376,13 @@ export const translations = {
 			featureLabel: '功能',
 			prompt: '请输入 Feature ID 查看审计记录。',
 			emptyState: '该功能暂无审计记录。',
-			stubHint: '后端当前返回空列表（占位）。',
 			table: {
-				timestamp: '时间',
-				actor: '操作人',
-				action: '动作',
-				diff: '变更'
+				decidedAt: '时间',
+				requestId: '请求 ID',
+				userId: '用户 ID',
+				variant: '变体',
+				reason: '原因',
+				payload: '载荷'
 			},
 			nextPage: '下一页'
 		},
