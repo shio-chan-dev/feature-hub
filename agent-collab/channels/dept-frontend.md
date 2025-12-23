@@ -61,3 +61,27 @@ Append-only.
     - Confirm API availability/port, and any env var standard for API_BASE_URL.
   status: open
   relates: []
+
+- timestamp: 2025-12-22T18:12:00+08:00
+  from: ai/frontend/rep-01
+  thread: feature-hub-i18n-docs
+  type: update
+  priority: P1
+  body: |
+    Deliverables:
+    - Added language switcher (EN/中文) via cookie + SSR locale resolution; labels localized across pages.
+    - Implemented /set-locale endpoint; removed invalid actions export from +layout.server.ts.
+    - Docs page expanded with service-integration guidance + decision routing example.
+
+    Risks:
+    - Language switch relies on POST /set-locale; ensure route is deployed.
+    - External Google Fonts dependency remains; fallback ok if blocked.
+
+    Next steps:
+    - Smoke test locale switching and verify all pages render after language toggle.
+    - Confirm backend API URL/port used in docs samples.
+
+    Support needed:
+    - Confirm if additional locales or localized backend error messages are required.
+  status: open
+  relates: []

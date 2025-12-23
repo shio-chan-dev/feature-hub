@@ -3,7 +3,13 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import AppHeader from '$lib/components/AppHeader.svelte';
 
-	let { children } = $props();
+	let { children, data } = $props();
+
+	$effect(() => {
+		if (data?.locale && typeof document !== 'undefined') {
+			document.documentElement.lang = data.locale;
+		}
+	});
 </script>
 
 <svelte:head>
@@ -19,6 +25,6 @@
 
 <div class="app-shell">
 	<a class="skip-link" href="#main">Skip to content</a>
-	<AppHeader />
+	<AppHeader locale={data.locale} />
 	<main class="page" id="main">{@render children()}</main>
 </div>

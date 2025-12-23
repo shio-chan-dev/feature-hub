@@ -1,29 +1,31 @@
 <script lang="ts">
+	import { defaultLocale, translations } from '$lib/i18n';
+
 	let { data } = $props();
+	const currentLocale = $derived(data.locale ?? defaultLocale);
+	const copy = $derived(translations[currentLocale]);
 </script>
 
 <div class="container">
 	<section class="section">
-		<h1>Audit log</h1>
-		<p class="lead">
-			Track configuration changes across features. Provide a feature ID to view audit entries.
-		</p>
+		<h1>{copy.audits.title}</h1>
+		<p class="lead">{copy.audits.lead}</p>
 	</section>
 
 	<section class="section">
 		<div class="panel">
 			<form method="GET" class="form-grid">
 				<label>
-					Feature ID
+					{copy.audits.form.featureId}
 					<input name="feature_id" value={data.featureId} placeholder="feat-001" />
 				</label>
 				<label>
-					Limit
+					{copy.audits.form.limit}
 					<input name="limit" type="number" min="1" max="200" value={data.limit} />
 				</label>
 				<div class="form-actions">
-					<button class="button primary" type="submit">Load audits</button>
-					<a class="button ghost" href="/">Back to features</a>
+					<button class="button primary" type="submit">{copy.audits.form.load}</button>
+					<a class="button ghost" href="/">{copy.common.backToFeatures}</a>
 				</div>
 			</form>
 			{#if data.error}
@@ -34,27 +36,29 @@
 
 	<section class="section">
 		<div class="section-header">
-			<h2 class="section-title">Entries</h2>
-			<span class="subtle">Feature: {data.featureId || 'none selected'}</span>
+			<h2 class="section-title">{copy.audits.entriesTitle}</h2>
+			<span class="subtle">
+				{copy.audits.featureLabel}: {data.featureId || copy.common.noneSelected}
+			</span>
 		</div>
 		{#if !data.featureId}
 			<div class="panel">
-				<p>Enter a feature ID to view audit history.</p>
+				<p>{copy.audits.prompt}</p>
 			</div>
 		{:else if data.audits.length === 0}
 			<div class="panel">
-				<p>No audit entries yet for this feature.</p>
-				<p class="subtle">The backend currently returns an empty list (stub).</p>
+				<p>{copy.audits.emptyState}</p>
+				<p class="subtle">{copy.audits.stubHint}</p>
 			</div>
 		{:else}
 			<div class="panel">
 				<table class="table">
 					<thead>
 						<tr>
-							<th>Timestamp</th>
-							<th>Actor</th>
-							<th>Action</th>
-							<th>Diff</th>
+							<th>{copy.audits.table.timestamp}</th>
+							<th>{copy.audits.table.actor}</th>
+							<th>{copy.audits.table.action}</th>
+							<th>{copy.audits.table.diff}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -68,19 +72,19 @@
 								</td>
 							</tr>
 						{/each}
-				</tbody>
-			</table>
-			{#if data.nextCursor}
-				<div class="form-actions">
-					<a
-						class="button ghost"
-						href={`?feature_id=${encodeURIComponent(data.featureId)}&limit=${data.limit}&cursor=${encodeURIComponent(data.nextCursor)}`}
-					>
-						Next page
-					</a>
-				</div>
-			{/if}
-		</div>
-	{/if}
+					</tbody>
+				</table>
+				{#if data.nextCursor}
+					<div class="form-actions">
+						<a
+							class="button ghost"
+							href={`?feature_id=${encodeURIComponent(data.featureId)}&limit=${data.limit}&cursor=${encodeURIComponent(data.nextCursor)}`}
+						>
+							{copy.audits.nextPage}
+						</a>
+					</div>
+				{/if}
+			</div>
+		{/if}
 	</section>
 </div>
