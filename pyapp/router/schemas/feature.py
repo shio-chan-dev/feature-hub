@@ -15,5 +15,6 @@ class FeatureOut(BaseModel):
     active_experiment_id: str | None
 
 class FeaturePatch(BaseModel):
-    status: str
+    name: str | None = None
+    status: str | None = None
     active_experiment_id: str | None = None

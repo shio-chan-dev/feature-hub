@@ -242,3 +242,24 @@ Append-only.
     - Targeting format, bucketing key, request_id idempotency.
   status: open
   relates: []
+
+- timestamp: 2025-12-23T18:26:38+08:00
+  from: ai/backend/engineer-02
+  thread: audit-logic
+  type: update
+  priority: P2
+  body: |
+    交付物:
+    - 审计(audit)=决策日志, 用于追溯/对账/幂等复查, 不是指标统计系统。
+    - 指标统计建议由业务方打点曝光/转化事件, 需携带 experiment_id/variant_key/user_id.
+
+    风险:
+    - 缺少统一事件规范会导致指标口径不一致。
+
+    下一步:
+    - 若平台需要统一统计, 增加事件上报入口(HTTP或消息队列).
+
+    所需支持:
+    - 确认是否由平台接收事件及字段规范/敏感字段处理策略。
+  status: open
+  relates: []

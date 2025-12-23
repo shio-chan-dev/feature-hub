@@ -1,5 +1,8 @@
 from fastapi import APIRouter
+
 from utils.logger import logger
+from services.decision import dec_svc
+
 router = APIRouter(tags=["audits"])
 
 @router.get("/audits")
@@ -10,7 +13,7 @@ def list_audits(feature_id: str, limit: int = 50, cursor: str | None = None):
             limit,
             cursor,
             )
-    result = {"items": [], "next_cursor": None}
+    result = dec_svc.list_audits(feature_id, limit, cursor)
     logger.info(
             "[router.audit] list_audits success feature_id=%s count=%s next_cursor=%s",
             feature_id,

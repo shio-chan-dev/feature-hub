@@ -213,23 +213,28 @@ curl -sS "$BASE_URL/features/feat-001"
 ```
 
 #### PATCH /features/{feature_id}
-更新 Feature 状态与激活实验。
+更新 Feature（支持部分字段更新）。
 
-请求体:
+请求体（字段可选）:
 ```json
-{"status":"experiment","active_experiment_id":"exp-001"}
+{"name":"New Checkout v2","status":"experiment","active_experiment_id":"exp-001"}
 ```
+
+规则:
+- status=experiment 时必须提供 active_experiment_id
+- status 非 experiment 时会清空 active_experiment_id
+- 仅传 active_experiment_id 时要求当前 status=experiment
 
 curl:
 ```bash
 curl -sS -X PATCH "$BASE_URL/features/feat-001" \
   -H "Content-Type: application/json" \
-  -d '{"status":"experiment","active_experiment_id":"exp-001"}'
+  -d '{"name":"New Checkout v2","status":"experiment","active_experiment_id":"exp-001"}'
 ```
 
 响应示例:
 ```json
-{"id":"feat-001","key":"new_checkout","name":"New Checkout","status":"experiment","active_experiment_id":"exp-001"}
+{"id":"feat-001","key":"new_checkout","name":"New Checkout v2","status":"experiment","active_experiment_id":"exp-001"}
 ```
 
 ### Experiment 接口
@@ -283,23 +288,23 @@ curl -sS "$BASE_URL/experiments/exp-001"
 ```
 
 #### PATCH /experiments/{experiment_id}
-更新 Experiment。
+更新 Experiment（支持部分字段更新）。
 
 请求体（字段可选）:
 ```json
-{"status":"running","rollout_percent":50,"seed":"2024q4"}
+{"name":"checkout-test-v2","status":"running","rollout_percent":50,"seed":"2024q4"}
 ```
 
 curl:
 ```bash
 curl -sS -X PATCH "$BASE_URL/experiments/exp-001" \
   -H "Content-Type: application/json" \
-  -d '{"status":"running","rollout_percent":50,"seed":"2024q4"}'
+  -d '{"name":"checkout-test-v2","status":"running","rollout_percent":50,"seed":"2024q4"}'
 ```
 
 响应示例:
 ```json
-{"id":"exp-001","feature_id":"feat-001","name":"checkout-test","seed":"2024q4","status":"running","rollout_percent":50}
+{"id":"exp-001","feature_id":"feat-001","name":"checkout-test-v2","seed":"2024q4","status":"running","rollout_percent":50}
 ```
 
 ### Variant 接口

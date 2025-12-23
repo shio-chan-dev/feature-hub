@@ -7,6 +7,7 @@ class ExperimentCreate(BaseModel):
 
 
 class ExperimentPatch(BaseModel):
+    name: str | None = None
     status: str | None = None
     rollout_percent: int | None = None
     seed: str | None = None
