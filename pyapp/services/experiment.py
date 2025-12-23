@@ -32,8 +32,17 @@ class ExperimentService:
         return self._table.get(experiment_id)
 
     #
-    def update(self, experiment_id: str, status: str | None, rollout_percent: int | None, seed: str | None) -> Experiment:
+    def update(
+        self,
+        experiment_id: str,
+        status: str | None,
+        rollout_percent: int | None,
+        seed: str | None,
+        name: str | None,
+    ) -> Experiment:
         exp = self._table.get(experiment_id)
+        if name is not None:
+            exp.name = name
         if status is not None:
             try:
                 exp.status = ExperimentStatus(status)
@@ -50,6 +59,5 @@ class ExperimentService:
         return self._table.update(exp)
 
 exp_svc: ExperimentService = ExperimentService()
-
 
 

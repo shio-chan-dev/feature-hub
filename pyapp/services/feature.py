@@ -33,20 +33,34 @@ class FeatureService:
     def list(self) -> list[Feature]:
         return list(self._table.list())
 
-    def update(self, feature_id: str, status: str, active_experiment_id: str | None) -> Feature:
+    def update(
+        self,
+        feature_id: str,
+        status: str | None,
+        active_experiment_id: str | None,
+        name: str | None,
+    ) -> Feature:
         feat = self._table.get(feature_id)
-        try:
-            status_enum = FeatureStatus(status)
-        except ValueError:
-            raise ValidationError("invalid_status")
+        if name is not None:
+            feat.name = name
 
-        if status_enum != FeatureStatus.EXPERIMENT:
-            active_experiment_id = None
-        if status_enum == FeatureStatus.EXPERIMENT and not active_experiment_id:
-            raise ValidationError("acitve experiment id required")
+        if status is not None:
+            try:
+                status_enum = FeatureStatus(status)
+            except ValueError:
+                raise ValidationError("invalid_status")
 
-        feat.status = status_enum
-        feat.active_experiment_id = active_experiment_id
+            if status_enum != FeatureStatus.EXPERIMENT:
+                active_experiment_id = None
+            if status_enum == FeatureStatus.EXPERIMENT and not active_experiment_id:
+                raise ValidationError("acitve experiment id required")
+
+            feat.status = status_enum
+            feat.active_experiment_id = active_experiment_id
+        elif active_experiment_id is not None:
+            if feat.status != FeatureStatus.EXPERIMENT:
+                raise ValidationError("active experiment id requires experiment status")
+            feat.active_experiment_id = active_experiment_id
         return self._table.update(feat)
 
     def get_by_key(self, key: str) -> Feature:
