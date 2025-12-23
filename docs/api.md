@@ -45,6 +45,7 @@
   * [Variant 接口](#variant-接口)
     * [POST /experiments/{experiment_id}/variants](#post-experimentsexperiment_idvariants)
     * [GET /experiments/{experiment_id}/variants](#get-experimentsexperiment_idvariants)
+    * [PATCH /variants/{variant_id}](#patch-variantsvariant_id)
   * [Decision 接口](#decision-接口)
     * [POST /decisions](#post-decisions)
   * [Audit 接口](#audit-接口)
@@ -129,6 +130,7 @@ BASE_URL=http://localhost:6789
 | --- | --- | --- |
 | POST | /experiments/{experiment_id}/variants | 创建 Variant |
 | GET | /experiments/{experiment_id}/variants | Variant 列表 |
+| PATCH | /variants/{variant_id} | 更新 Variant |
 
 ### Decision 接口概览
 | Method | Path | 说明 |
@@ -335,6 +337,29 @@ curl -sS "$BASE_URL/experiments/exp-001/variants"
 [
   {"id":"var-001","experiment_id":"exp-001","key":"control","weight":50,"is_control":true,"payload":{}}
 ]
+```
+
+#### PATCH /variants/{variant_id}
+更新 Variant（支持部分字段更新）。
+
+路径参数:
+- variant_id: Variant ID
+
+请求体（字段可选）:
+```json
+{"weight":60,"is_control":false,"payload":{"ui":"v2"}}
+```
+
+curl:
+```bash
+curl -sS -X PATCH "$BASE_URL/variants/var-001" \
+  -H "Content-Type: application/json" \
+  -d '{"weight":60,"is_control":false,"payload":{"ui":"v2"}}'
+```
+
+响应示例:
+```json
+{"id":"var-001","experiment_id":"exp-001","key":"control","weight":60,"is_control":false,"payload":{"ui":"v2"}}
 ```
 
 ### Decision 接口
