@@ -1,6 +1,8 @@
+import { env } from '$env/dynamic/private';
+
 const DEFAULT_BASE_URL = 'http://localhost:6789';
 
-export const API_BASE_URL = process.env.API_BASE_URL ?? DEFAULT_BASE_URL;
+export const API_BASE_URL = env.API_BASE_URL ?? DEFAULT_BASE_URL;
 
 export class ApiError extends Error {
 	status: number;
