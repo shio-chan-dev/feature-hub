@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { defaultLocale, translations } from '$lib/i18n';
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 
 	let { data } = $props();
 	const currentLocale = $derived(data.locale ?? defaultLocale);
@@ -11,7 +12,7 @@
 			window.history.back();
 			return;
 		}
-		goto('/');
+		goto(base || '/');
 	};
 </script>
 
@@ -39,7 +40,7 @@
 				</label>
 				<div class="form-actions">
 					<button class="button primary" type="submit">{copy.audits.form.load}</button>
-					<button class="button ghost" type="button" on:click={goBack}>
+					<button class="button ghost" type="button" onclick={goBack}>
 						{copy.common.backToFeatures}
 					</button>
 				</div>
@@ -58,7 +59,7 @@
 					{#each data.features.slice(0, 6) as feature}
 						<a
 							class="button ghost"
-							href={`/audits?feature_id=${encodeURIComponent(feature.id)}&limit=${data.limit}`}
+							href={`${base}/audits?feature_id=${encodeURIComponent(feature.id)}&limit=${data.limit}`}
 						>
 							{feature.name}
 						</a>

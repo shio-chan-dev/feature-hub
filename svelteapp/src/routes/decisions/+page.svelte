@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { defaultLocale, translations } from '$lib/i18n';
 
 	let { data, form } = $props();
@@ -12,7 +13,7 @@
 			window.history.back();
 			return;
 		}
-		goto('/');
+		goto(base || '/');
 	};
 </script>
 
@@ -43,7 +44,7 @@
 				</label>
 				<div class="form-actions">
 					<button class="button primary" type="submit">{copy.decisions.form.submit}</button>
-					<button class="button ghost" type="button" on:click={goBack}>
+					<button class="button ghost" type="button" onclick={goBack}>
 						{copy.common.backToFeatures}
 					</button>
 				</div>

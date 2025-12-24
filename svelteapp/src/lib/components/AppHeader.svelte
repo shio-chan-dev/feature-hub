@@ -1,6 +1,7 @@
 <script lang="ts">
 	// SvelteKit stores for current URL info and navigation state.
 	import { page, navigating } from '$app/stores';
+	import { base } from '$app/paths';
 	// Localization helpers and types.
 	import { defaultLocale, localeLabels, locales, translations, type Locale } from '$lib/i18n';
 
@@ -9,11 +10,15 @@
 	// - apiBaseUrl: backend base URL (from server env)
 	let { locale, apiBaseUrl } = $props<{ locale: Locale; apiBaseUrl?: string }>();
 
+	const rootPath = base || '/';
+	const withBase = (path: string) => (base ? `${base}${path}` : path);
+	const featuresPrefix = base ? `${base}/features` : '/features';
+
 	// Top-level navigation links; key maps to i18n labels.
 	const navItems = [
-		{ href: '/', key: 'features' },
-		{ href: '/audits', key: 'audits' },
-		{ href: '/decisions', key: 'decisions' }
+		{ href: rootPath, key: 'features' },
+		{ href: withBase('/audits'), key: 'audits' },
+		{ href: withBase('/decisions'), key: 'decisions' }
 	] as const;
 
 	// $derived makes a reactive value that updates when dependencies change.
@@ -38,8 +43,8 @@
 	);
 
 	const isActive = (href: string) => {
-		if (href === '/') {
-			return pathname === '/' || pathname.startsWith('/features');
+		if (href === rootPath) {
+			return pathname === rootPath || pathname.startsWith(featuresPrefix);
 		}
 
 		return pathname.startsWith(href);
@@ -54,7 +59,7 @@
 
 <header class="app-header">
 	<!-- Brand / product identity -->
-	<a class="brand" href="/">
+	<a class="brand" href={rootPath}>
 		<div class="brand-title">{copy.header.brandTitle}</div>
 		<div class="brand-subtitle">{copy.header.brandSubtitle}</div>
 	</a>
@@ -75,7 +80,7 @@
 	<!-- Right-side controls and status -->
 	<div class="header-meta">
 		<!-- Locale switcher posts to /set-locale with a redirect back -->
-		<form class="lang-form" method="POST" action="/set-locale">
+		<form class="lang-form" method="POST" action={withBase('/set-locale')}>
 			<input type="hidden" name="redirect" value={redirectTarget} />
 			<label class="lang-select">
 				<span>{copy.header.language}</span>
@@ -89,8 +94,8 @@
 			</label>
 		</form>
 		<!-- Quick links -->
-		<a class="button ghost" href="/docs">{copy.header.docs}</a>
-		<a class="button primary" href="/#create-feature">{copy.header.newFeature}</a>
+		<a class="button ghost" href={withBase('/docs')}>{copy.header.docs}</a>
+		<a class="button primary" href={`${rootPath}#create-feature`}>{copy.header.newFeature}</a>
 		<!-- API base URL status pill -->
 		<div class="meta-pill" title={apiBaseUrl}>
 			<span class="dot" aria-hidden="true"></span>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	// Localization utilities and string table.
 	import { defaultLocale, format, translations } from '$lib/i18n';
+	import { base } from '$app/paths';
 
 	// data: from +page.server.ts load; form: from form actions.
 	let { data, form } = $props();
@@ -13,6 +14,8 @@
 	const experimentCount = $derived(
 		data.features.filter((item) => item.status === 'experiment').length
 	);
+	const withBase = (path: string) => (base ? `${base}${path}` : path);
+	const auditsHref = withBase('/audits');
 </script>
 
 <div class="container">
@@ -26,7 +29,7 @@
 			<!-- Primary actions -->
 			<div class="tag-row">
 				<a class="button primary" href="#create-feature">{copy.features.createFeature}</a>
-				<a class="button ghost" href="/audits">{copy.features.reviewAudits}</a>
+				<a class="button ghost" href={auditsHref}>{copy.features.reviewAudits}</a>
 			</div>
 		</div>
 		<div class="hero-panel reveal" style="--delay: 0.1s">
@@ -118,14 +121,17 @@
 						</div>
 						<!-- Actions: open feature detail or test decision -->
 						<div class="card-actions">
-							<a class="button" href={`/features/${feature.id}`}>{copy.common.open}</a>
+							<a class="button" href={withBase(`/features/${feature.id}`)}>{copy.common.open}</a>
 							<a
 								class="button ghost"
-								href={`/decisions?feature_key=${encodeURIComponent(feature.key)}`}
+								href={withBase(`/decisions?feature_key=${encodeURIComponent(feature.key)}`)}
 							>
 								{copy.features.tryDecision}
 							</a>
-							<a class="button ghost" href={`/audits?feature_id=${encodeURIComponent(feature.id)}`}>
+							<a
+								class="button ghost"
+								href={withBase(`/audits?feature_id=${encodeURIComponent(feature.id)}`)}
+							>
 								{copy.header.nav.audits}
 							</a>
 						</div>
