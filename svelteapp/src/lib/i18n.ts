@@ -33,6 +33,8 @@ export const translations = {
 		common: {
 			backToFeatures: 'Back to features',
 			open: 'Open',
+			edit: 'Edit',
+			cancel: 'Cancel',
 			none: 'none',
 			noneSelected: 'none selected',
 			unknown: 'unknown',
@@ -146,6 +148,9 @@ export const translations = {
 			featureLabel: 'Feature',
 			prompt: 'Enter a feature ID to view audit history.',
 			emptyState: 'No audit entries yet for this feature.',
+			featureHint: 'Type a feature ID or pick a suggestion below.',
+			featureListError: 'Feature suggestions are unavailable right now.',
+			noFeatures: 'No features available yet. Create one first.',
 			table: {
 				decidedAt: 'Decided at',
 				requestId: 'Request ID',
@@ -265,6 +270,8 @@ export const translations = {
 		common: {
 			backToFeatures: '返回功能列表',
 			open: '打开',
+			edit: '编辑',
+			cancel: '取消',
 			none: '无',
 			noneSelected: '未选择',
 			unknown: '未知',
@@ -376,6 +383,9 @@ export const translations = {
 			featureLabel: '功能',
 			prompt: '请输入 Feature ID 查看审计记录。',
 			emptyState: '该功能暂无审计记录。',
+			featureHint: '输入 Feature ID，或从下方建议中选择。',
+			featureListError: '当前无法获取功能列表建议。',
+			noFeatures: '暂无功能，请先创建功能。',
 			table: {
 				decidedAt: '时间',
 				requestId: '请求 ID',

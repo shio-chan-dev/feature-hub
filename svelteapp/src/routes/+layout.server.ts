@@ -1,4 +1,5 @@
 import { defaultLocale, isLocale } from '$lib/i18n';
+import { API_BASE_URL } from '$lib/server/api';
 import type { LayoutServerLoad } from './$types';
 
 const resolveLocale = (cookieValue: string | undefined, acceptLanguage: string | null) => {
@@ -15,5 +16,5 @@ const resolveLocale = (cookieValue: string | undefined, acceptLanguage: string |
 
 export const load: LayoutServerLoad = async ({ cookies, request }) => {
 	const locale = resolveLocale(cookies.get('locale'), request.headers.get('accept-language'));
-	return { locale };
+	return { locale, apiBaseUrl: API_BASE_URL };
 };

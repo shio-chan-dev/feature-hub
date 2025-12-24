@@ -1,5 +1,5 @@
 import { apiRequest, getErrorMessage } from '$lib/server/api';
-import type { AuditList } from '$lib/types';
+import type { AuditList, Feature } from '$lib/types';
 import type { PageServerLoad } from './$types';
 
 const parseLimit = (value: string | null) => {
@@ -14,11 +14,21 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	const featureId = url.searchParams.get('feature_id')?.trim() ?? '';
 	const cursor = url.searchParams.get('cursor')?.trim() ?? '';
 	const limit = parseLimit(url.searchParams.get('limit'));
+	let features: Feature[] = [];
+	let featureListError: string | null = null;
+
+	try {
+		features = await apiRequest<Feature[]>(fetch, '/features');
+	} catch (error) {
+		featureListError = getErrorMessage(error);
+	}
 
 	if (!featureId) {
 		return {
 			featureId: '',
 			limit,
+			features,
+			featureListError,
 			audits: [],
 			nextCursor: null,
 			error: null
@@ -39,6 +49,8 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		return {
 			featureId,
 			limit,
+			features,
+			featureListError,
 			audits: response.items,
 			nextCursor: response.next_cursor,
 			error: null
@@ -47,6 +59,8 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		return {
 			featureId,
 			limit,
+			features,
+			featureListError,
 			audits: [],
 			nextCursor: null,
 			error: getErrorMessage(error)

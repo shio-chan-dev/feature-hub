@@ -213,6 +213,11 @@ button {
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.button.compact {
+	padding: 0.35rem 0.85rem;
+	font-size: 0.8rem;
+}
+
 .button:hover {
 	transform: translateY(-1px);
 	box-shadow: 0 14px 24px rgba(31, 127, 112, 0.2);
@@ -413,6 +418,10 @@ textarea {
 	gap: 1.2rem;
 }
 
+.variant-grid {
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
 .card {
 	background: var(--surface);
 	border-radius: var(--radius-md);
@@ -430,6 +439,19 @@ textarea {
 	gap: 0.8rem;
 }
 
+.card-header-meta {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.6rem;
+	text-align: right;
+	flex-wrap: wrap;
+}
+
+.card-header-meta .card-meta {
+	font-size: 0.8rem;
+}
+
 .card-title {
 	font-weight: 700;
 	font-size: 1.1rem;
@@ -438,6 +460,23 @@ textarea {
 .card-meta {
 	color: var(--muted);
 	font-size: 0.9rem;
+}
+
+.meta-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	color: var(--muted);
+	font-size: 0.85rem;
+}
+
+.meta-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.2rem 0.6rem;
+	border-radius: 999px;
+	background: rgba(27, 24, 18, 0.06);
 }
 
 .card-actions {

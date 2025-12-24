@@ -1,9 +1,18 @@
 <script lang="ts">
 	import { defaultLocale, translations } from '$lib/i18n';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 	const currentLocale = $derived(data.locale ?? defaultLocale);
 	const copy = $derived(translations[currentLocale]);
+
+	const goBack = () => {
+		if (typeof window !== 'undefined' && window.history.length > 1) {
+			window.history.back();
+			return;
+		}
+		goto('/');
+	};
 </script>
 
 <div class="container">
@@ -17,7 +26,12 @@
 			<form method="GET" class="form-grid">
 				<label>
 					{copy.audits.form.featureId}
-					<input name="feature_id" value={data.featureId} placeholder="feat-001" />
+					<input
+						name="feature_id"
+						value={data.featureId}
+						placeholder="feat-001"
+						list="feature-list"
+					/>
 				</label>
 				<label>
 					{copy.audits.form.limit}
@@ -25,9 +39,34 @@
 				</label>
 				<div class="form-actions">
 					<button class="button primary" type="submit">{copy.audits.form.load}</button>
-					<a class="button ghost" href="/">{copy.common.backToFeatures}</a>
+					<button class="button ghost" type="button" on:click={goBack}>
+						{copy.common.backToFeatures}
+					</button>
 				</div>
 			</form>
+			<datalist id="feature-list">
+				{#each data.features as feature}
+					<option value={feature.id}>{feature.name} ({feature.key})</option>
+				{/each}
+			</datalist>
+			<p class="subtle">{copy.audits.featureHint}</p>
+			{#if data.featureListError}
+				<p class="subtle">{copy.audits.featureListError}</p>
+			{/if}
+			{#if data.features.length > 0}
+				<div class="tag-row">
+					{#each data.features.slice(0, 6) as feature}
+						<a
+							class="button ghost"
+							href={`/audits?feature_id=${encodeURIComponent(feature.id)}&limit=${data.limit}`}
+						>
+							{feature.name}
+						</a>
+					{/each}
+				</div>
+			{:else}
+				<p class="subtle">{copy.audits.noFeatures}</p>
+			{/if}
 			{#if data.error}
 				<p class="banner error" role="alert">{data.error}</p>
 			{/if}

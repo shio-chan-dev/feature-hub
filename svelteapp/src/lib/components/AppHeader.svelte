@@ -1,20 +1,41 @@
 <script lang="ts">
+	// SvelteKit stores for current URL info and navigation state.
 	import { page, navigating } from '$app/stores';
+	// Localization helpers and types.
 	import { defaultLocale, localeLabels, locales, translations, type Locale } from '$lib/i18n';
 
-	let { locale } = $props<{ locale: Locale }>();
+	// Props injected by the root layout.
+	// - locale: current UI language
+	// - apiBaseUrl: backend base URL (from server env)
+	let { locale, apiBaseUrl } = $props<{ locale: Locale; apiBaseUrl?: string }>();
 
+	// Top-level navigation links; key maps to i18n labels.
 	const navItems = [
 		{ href: '/', key: 'features' },
 		{ href: '/audits', key: 'audits' },
 		{ href: '/decisions', key: 'decisions' }
 	] as const;
 
+	// $derived makes a reactive value that updates when dependencies change.
 	const pathname = $derived($page.url.pathname);
 	const isSyncing = $derived(Boolean($navigating));
+	// Keep the current page + query so language switch can return here.
 	const redirectTarget = $derived(`${$page.url.pathname}${$page.url.search}`);
 	const currentLocale = $derived(locale ?? defaultLocale);
 	const copy = $derived(translations[currentLocale]);
+	// Friendly string for the API base URL shown in the header pill.
+	const apiDisplay = $derived(
+		(() => {
+			if (!apiBaseUrl) {
+				return copy.common.unknown;
+			}
+			try {
+				return new URL(apiBaseUrl).host;
+			} catch {
+				return apiBaseUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+			}
+		})()
+	);
 
 	const isActive = (href: string) => {
 		if (href === '/') {
@@ -24,6 +45,7 @@
 		return pathname.startsWith(href);
 	};
 
+	// Submit the locale switch form when the select value changes.
 	const submitLocale = (event: Event) => {
 		const form = (event.currentTarget as HTMLSelectElement | null)?.form;
 		form?.requestSubmit();
@@ -31,11 +53,13 @@
 </script>
 
 <header class="app-header">
-	<div class="brand">
+	<!-- Brand / product identity -->
+	<a class="brand" href="/">
 		<div class="brand-title">{copy.header.brandTitle}</div>
 		<div class="brand-subtitle">{copy.header.brandSubtitle}</div>
-	</div>
+	</a>
 
+	<!-- Primary navigation -->
 	<nav class="nav" aria-label="Primary">
 		{#each navItems as item}
 			<a
@@ -48,7 +72,9 @@
 		{/each}
 	</nav>
 
+	<!-- Right-side controls and status -->
 	<div class="header-meta">
+		<!-- Locale switcher posts to /set-locale with a redirect back -->
 		<form class="lang-form" method="POST" action="/set-locale">
 			<input type="hidden" name="redirect" value={redirectTarget} />
 			<label class="lang-select">
@@ -62,12 +88,15 @@
 				</select>
 			</label>
 		</form>
+		<!-- Quick links -->
 		<a class="button ghost" href="/docs">{copy.header.docs}</a>
 		<a class="button primary" href="/#create-feature">{copy.header.newFeature}</a>
-		<div class="meta-pill">
+		<!-- API base URL status pill -->
+		<div class="meta-pill" title={apiBaseUrl}>
 			<span class="dot" aria-hidden="true"></span>
-			<span>{copy.header.apiLabel}: 6789</span>
+			<span>{copy.header.apiLabel}: {apiDisplay}</span>
 		</div>
+		<!-- Live navigation indicator -->
 		{#if isSyncing}
 			<span class="sync" role="status" aria-live="polite">{copy.header.syncing}</span>
 		{/if}
