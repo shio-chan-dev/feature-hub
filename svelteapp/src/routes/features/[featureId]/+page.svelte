@@ -67,7 +67,7 @@
 <div class="container">
 	<section class="section">
 		<div class="tag-row">
-			<button class="button ghost" type="button" on:click={goBack}>
+			<button class="button ghost" type="button" onclick={goBack}>
 				{copy.common.backToFeatures}
 			</button>
 			{#if data.feature?.id}
@@ -97,7 +97,7 @@
 			<div class="section-header">
 				<h2 class="section-title">{copy.featureDetail.statusTitle}</h2>
 				<div class="tag-row">
-					<button class="button ghost" type="button" on:click={toggleFeatureEdit}>
+					<button class="button ghost" type="button" onclick={toggleFeatureEdit}>
 						{isFeatureEditing ? copy.common.cancel : copy.common.edit}
 					</button>
 				</div>
@@ -169,7 +169,7 @@
 				<h2 class="section-title">{copy.featureDetail.experimentsTitle}</h2>
 				<div class="tag-row">
 					<span class="subtle">{copy.featureDetail.experimentsHint}</span>
-					<button class="button ghost" type="button" on:click={toggleCreateExperiment}>
+					<button class="button ghost" type="button" onclick={toggleCreateExperiment}>
 						{isCreateExperimentOpen ? copy.common.cancel : copy.featureDetail.experimentForm.create}
 					</button>
 				</div>
@@ -231,7 +231,7 @@
 									<button
 										class="button ghost compact"
 										type="button"
-										on:click={() => toggleExperimentEdit(experiment.id)}
+										onclick={() => toggleExperimentEdit(experiment.id)}
 									>
 										{editingExperimentId === experiment.id ? copy.common.cancel : copy.common.edit}
 									</button>
@@ -318,7 +318,7 @@
 						<span class="subtle">
 							{format(copy.featureDetail.variantsFor, { name: data.selectedExperiment.name })}
 						</span>
-						<button class="button ghost" type="button" on:click={toggleCreateVariant}>
+						<button class="button ghost" type="button" onclick={toggleCreateVariant}>
 							{isCreateVariantOpen ? copy.common.cancel : copy.featureDetail.variantForm.add}
 						</button>
 					{:else}
@@ -349,7 +349,7 @@
 											<button
 												class="button ghost compact"
 												type="button"
-												on:click={() => toggleVariantEdit(variant.id)}
+												onclick={() => toggleVariantEdit(variant.id)}
 											>
 												{editingVariantId === variant.id ? copy.common.cancel : copy.common.edit}
 											</button>

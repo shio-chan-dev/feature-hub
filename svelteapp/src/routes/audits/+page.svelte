@@ -40,7 +40,7 @@
 				</label>
 				<div class="form-actions">
 					<button class="button primary" type="submit">{copy.audits.form.load}</button>
-					<button class="button ghost" type="button" on:click={goBack}>
+					<button class="button ghost" type="button" onclick={goBack}>
 						{copy.common.backToFeatures}
 					</button>
 				</div>
