@@ -242,13 +242,12 @@ export const translations = {
 				experimentInactive: 'experiment not running, returns control.',
 				assigned: 'experiment running, variant selected.'
 			},
-			notesTitle: 'Notes',
-			notesHint: 'Known constraints in the MVP.',
+			notesTitle: 'Usage tips',
+			notesHint: 'Quick reminders for smooth collaboration.',
 			notes: {
-				inMemory: 'Storage is in-memory; restart resets all data.',
-				decisionLogic:
-					'Decision logic currently picks the first variant (weights/rollout TBD).',
-				auditStub: 'Audit endpoint returns empty results (stub).'
+				controlVariant: 'Keep a clear control variant for safe fallback.',
+				auditCheck: 'Review audit entries after major changes to confirm behavior.',
+				naming: 'Use consistent names so everyone can track updates easily.'
 			}
 		}
 	},
@@ -471,12 +470,12 @@ export const translations = {
 				experimentInactive: '实验未运行，返回对照。',
 				assigned: '实验运行中，返回分配的变体。'
 			},
-			notesTitle: '注意事项',
-			notesHint: '当前版本限制。',
+			notesTitle: '使用提示',
+			notesHint: '日常使用的小提醒。',
 			notes: {
-				inMemory: '存储为内存，重启即清空。',
-				decisionLogic: '当前决策逻辑总是选择第一个变体（权重/灰度待实现）。',
-				auditStub: '审计接口当前返回空结果（占位）。'
+				controlVariant: '为每个实验准备清晰的对照变体，便于回退。',
+				auditCheck: '重要变更后查看审计记录，确认结果符合预期。',
+				naming: '保持命名一致，方便团队协作与追踪。'
 			}
 		}
 	}
