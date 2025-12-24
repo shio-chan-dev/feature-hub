@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { slide } from 'svelte/transition';
 	import { defaultLocale, format, translations } from '$lib/i18n';
 
@@ -59,7 +60,7 @@
 			window.history.back();
 			return;
 		}
-		goto('/');
+		goto(base || '/');
 	};
 </script>
 
@@ -70,7 +71,10 @@
 				{copy.common.backToFeatures}
 			</button>
 			{#if data.feature?.id}
-				<a class="button ghost" href={`/audits?feature_id=${encodeURIComponent(data.feature.id)}`}>
+				<a
+					class="button ghost"
+					href={`${base}/audits?feature_id=${encodeURIComponent(data.feature.id)}`}
+				>
 					{copy.header.nav.audits}
 				</a>
 			{/if}
