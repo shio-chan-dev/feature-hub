@@ -23,6 +23,31 @@ const parseNumber = (value: FormDataEntryValue | null) => {
 	return Number.isFinite(parsed) ? parsed : null;
 };
 
+const parseOptionalNumber = (value: FormDataEntryValue | null) => {
+	if (typeof value !== 'string') {
+		return null;
+	}
+	const trimmed = value.trim();
+	if (!trimmed) {
+		return null;
+	}
+	const parsed = Number(trimmed);
+	return Number.isFinite(parsed) ? parsed : null;
+};
+
+const parseOptionalBoolean = (value: FormDataEntryValue | null) => {
+	if (typeof value !== 'string') {
+		return null;
+	}
+	if (value === 'true') {
+		return true;
+	}
+	if (value === 'false') {
+		return false;
+	}
+	return null;
+};
+
 export const load: PageServerLoad = async ({ fetch, params, url }) => {
 	const featureId = params.featureId;
 
@@ -61,6 +86,7 @@ export const load: PageServerLoad = async ({ fetch, params, url }) => {
 export const actions: Actions = {
 	updateFeature: async ({ request, fetch, params }) => {
 		const formData = await request.formData();
+		const nameValue = parseString(formData.get('name'));
 		const statusValue = parseString(formData.get('status'));
 		const activeExperimentValue = parseString(formData.get('active_experiment_id'));
 
@@ -71,10 +97,18 @@ export const actions: Actions = {
 			});
 		}
 
+		if (statusValue === 'experiment' && !activeExperimentValue) {
+			return fail(400, {
+				action: 'updateFeature',
+				error: 'Active experiment is required for experiment status.'
+			});
+		}
+
 		try {
 			const payload = {
+				name: nameValue || undefined,
 				status: statusValue,
-				active_experiment_id: activeExperimentValue || null
+				active_experiment_id: statusValue === 'experiment' ? activeExperimentValue : null
 			};
 
 			const feature = await apiRequest<Feature>(fetch, `/features/${params.featureId}`, {
@@ -145,6 +179,7 @@ export const actions: Actions = {
 	updateExperiment: async ({ request, fetch }) => {
 		const formData = await request.formData();
 		const experimentId = parseString(formData.get('experiment_id'));
+		const nameValue = parseString(formData.get('name'));
 		const statusValue = parseString(formData.get('status'));
 		const seedValue = parseString(formData.get('seed'));
 		const rolloutValue = parseNumber(formData.get('rollout_percent'));
@@ -174,6 +209,7 @@ export const actions: Actions = {
 
 		try {
 			const payload = {
+				name: nameValue || undefined,
 				status: statusValue || undefined,
 				seed: seedValue || undefined,
 				rollout_percent: rolloutValue ?? undefined
@@ -255,6 +291,83 @@ export const actions: Actions = {
 		} catch (error) {
 			return fail(400, {
 				action: 'createVariant',
+				error: getErrorMessage(error)
+			});
+		}
+	},
+	updateVariant: async ({ request, fetch }) => {
+		const formData = await request.formData();
+		const variantId = parseString(formData.get('variant_id'));
+		const weightValue = parseOptionalNumber(formData.get('weight'));
+		const isControlValue = parseOptionalBoolean(formData.get('is_control'));
+		const payloadValue = parseString(formData.get('payload'));
+
+		if (!variantId) {
+			return fail(400, {
+				action: 'updateVariant',
+				error: 'Variant id is missing.'
+			});
+		}
+
+		if (weightValue !== null && weightValue < 0) {
+			return fail(400, {
+				action: 'updateVariant',
+				variantId,
+				error: 'Weight must be zero or more.'
+			});
+		}
+
+		let payload: Record<string, unknown> | undefined;
+
+		if (payloadValue) {
+			try {
+				payload = JSON.parse(payloadValue) as Record<string, unknown>;
+			} catch (error) {
+				return fail(400, {
+					action: 'updateVariant',
+					variantId,
+					error: 'Payload must be valid JSON.'
+				});
+			}
+		}
+
+		const patch: Partial<Pick<Variant, 'weight' | 'is_control' | 'payload'>> = {};
+
+		if (weightValue !== null) {
+			patch.weight = weightValue;
+		}
+		if (isControlValue !== null) {
+			patch.is_control = isControlValue;
+		}
+		if (payload !== undefined) {
+			patch.payload = payload;
+		}
+
+		if (Object.keys(patch).length === 0) {
+			return fail(400, {
+				action: 'updateVariant',
+				variantId,
+				error: 'No updates provided.'
+			});
+		}
+
+		try {
+			const variant = await apiRequest<Variant>(fetch, `/variants/${variantId}`, {
+				method: 'PATCH',
+				body: patch
+			});
+
+			return {
+				action: 'updateVariant',
+				success: true,
+				variantId,
+				message: 'Variant updated.',
+				variant
+			};
+		} catch (error) {
+			return fail(400, {
+				action: 'updateVariant',
+				variantId,
 				error: getErrorMessage(error)
 			});
 		}

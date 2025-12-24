@@ -1,10 +1,19 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { defaultLocale, translations } from '$lib/i18n';
 
 	let { data, form } = $props();
 	const contextPlaceholder = '{"tier":"beta"}';
 	const currentLocale = $derived(data.locale ?? defaultLocale);
 	const copy = $derived(translations[currentLocale]);
+
+	const goBack = () => {
+		if (typeof window !== 'undefined' && window.history.length > 1) {
+			window.history.back();
+			return;
+		}
+		goto('/');
+	};
 </script>
 
 <div class="container">
@@ -34,7 +43,9 @@
 				</label>
 				<div class="form-actions">
 					<button class="button primary" type="submit">{copy.decisions.form.submit}</button>
-					<a class="button ghost" href="/">{copy.common.backToFeatures}</a>
+					<button class="button ghost" type="button" on:click={goBack}>
+						{copy.common.backToFeatures}
+					</button>
 				</div>
 			</form>
 			{#if form?.action === 'makeDecision'}

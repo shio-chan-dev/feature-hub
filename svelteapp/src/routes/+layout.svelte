@@ -25,6 +25,6 @@
 
 <div class="app-shell">
 	<a class="skip-link" href="#main">Skip to content</a>
-	<AppHeader locale={data.locale} />
+	<AppHeader locale={data.locale} apiBaseUrl={data.apiBaseUrl} />
 	<main class="page" id="main">{@render children()}</main>
 </div>

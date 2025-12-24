@@ -33,6 +33,8 @@ export const translations = {
 		common: {
 			backToFeatures: 'Back to features',
 			open: 'Open',
+			edit: 'Edit',
+			cancel: 'Cancel',
 			none: 'none',
 			noneSelected: 'none selected',
 			unknown: 'unknown',
@@ -53,6 +55,7 @@ export const translations = {
 			experimentCreated: 'Experiment created.',
 			experimentUpdated: 'Experiment updated.',
 			variantAdded: 'Variant added.',
+			variantUpdated: 'Variant updated.',
 			decisionResolved: 'Decision resolved.'
 		},
 		features: {
@@ -84,6 +87,7 @@ export const translations = {
 		featureDetail: {
 			titleFallback: 'Feature detail',
 			keyLabel: 'Key',
+			nameLabel: 'Name',
 			idLabel: 'ID',
 			statusTitle: 'Feature status',
 			statusLabel: 'Status',
@@ -123,12 +127,18 @@ export const translations = {
 				control: 'Control',
 				add: 'Add variant',
 				helper: 'Control is required for safe fallback.'
+			},
+			variantUpdateForm: {
+				variant: 'Variant',
+				keep: 'Keep current',
+				submit: 'Update variant',
+				helper: 'Adjust weight, control, or payload (valid JSON).'
 			}
 		},
 		audits: {
 			title: 'Audit log',
 			lead:
-				'Track configuration changes across features. Provide a feature ID to view audit entries.',
+				'Review decision audits for a feature. Provide a feature ID to view recent entries.',
 			form: {
 				featureId: 'Feature ID',
 				limit: 'Limit',
@@ -138,12 +148,16 @@ export const translations = {
 			featureLabel: 'Feature',
 			prompt: 'Enter a feature ID to view audit history.',
 			emptyState: 'No audit entries yet for this feature.',
-			stubHint: 'The backend currently returns an empty list (stub).',
+			featureHint: 'Type a feature ID or pick a suggestion below.',
+			featureListError: 'Feature suggestions are unavailable right now.',
+			noFeatures: 'No features available yet. Create one first.',
 			table: {
-				timestamp: 'Timestamp',
-				actor: 'Actor',
-				action: 'Action',
-				diff: 'Diff'
+				decidedAt: 'Decided at',
+				requestId: 'Request ID',
+				userId: 'User ID',
+				variant: 'Variant',
+				reason: 'Reason',
+				payload: 'Payload'
 			},
 			nextPage: 'Next page'
 		},
@@ -228,13 +242,12 @@ export const translations = {
 				experimentInactive: 'experiment not running, returns control.',
 				assigned: 'experiment running, variant selected.'
 			},
-			notesTitle: 'Notes',
-			notesHint: 'Known constraints in the MVP.',
+			notesTitle: 'Usage tips',
+			notesHint: 'Quick reminders for smooth collaboration.',
 			notes: {
-				inMemory: 'Storage is in-memory; restart resets all data.',
-				decisionLogic:
-					'Decision logic currently picks the first variant (weights/rollout TBD).',
-				auditStub: 'Audit endpoint returns empty results (stub).'
+				controlVariant: 'Keep a clear control variant for safe fallback.',
+				auditCheck: 'Review audit entries after major changes to confirm behavior.',
+				naming: 'Use consistent names so everyone can track updates easily.'
 			}
 		}
 	},
@@ -256,6 +269,8 @@ export const translations = {
 		common: {
 			backToFeatures: '返回功能列表',
 			open: '打开',
+			edit: '编辑',
+			cancel: '取消',
 			none: '无',
 			noneSelected: '未选择',
 			unknown: '未知',
@@ -276,6 +291,7 @@ export const translations = {
 			experimentCreated: '实验已创建。',
 			experimentUpdated: '实验已更新。',
 			variantAdded: '变体已添加。',
+			variantUpdated: '变体已更新。',
 			decisionResolved: '决策已生成。'
 		},
 		features: {
@@ -306,6 +322,7 @@ export const translations = {
 		featureDetail: {
 			titleFallback: '功能详情',
 			keyLabel: '键值',
+			nameLabel: '名称',
 			idLabel: 'ID',
 			statusTitle: '功能状态',
 			statusLabel: '状态',
@@ -345,11 +362,17 @@ export const translations = {
 				control: '对照',
 				add: '添加变体',
 				helper: '需要对照变体以保证回退。'
+			},
+			variantUpdateForm: {
+				variant: '变体',
+				keep: '保持不变',
+				submit: '更新变体',
+				helper: '更新权重/对照/载荷（需为合法 JSON）。'
 			}
 		},
 		audits: {
 			title: '审计日志',
-			lead: '跟踪功能配置变更。输入 Feature ID 查看审计记录。',
+			lead: '查看某个功能的决策审计记录。输入 Feature ID 获取最新记录。',
 			form: {
 				featureId: 'Feature ID',
 				limit: '条数',
@@ -359,12 +382,16 @@ export const translations = {
 			featureLabel: '功能',
 			prompt: '请输入 Feature ID 查看审计记录。',
 			emptyState: '该功能暂无审计记录。',
-			stubHint: '后端当前返回空列表（占位）。',
+			featureHint: '输入 Feature ID，或从下方建议中选择。',
+			featureListError: '当前无法获取功能列表建议。',
+			noFeatures: '暂无功能，请先创建功能。',
 			table: {
-				timestamp: '时间',
-				actor: '操作人',
-				action: '动作',
-				diff: '变更'
+				decidedAt: '时间',
+				requestId: '请求 ID',
+				userId: '用户 ID',
+				variant: '变体',
+				reason: '原因',
+				payload: '载荷'
 			},
 			nextPage: '下一页'
 		},
@@ -443,12 +470,12 @@ export const translations = {
 				experimentInactive: '实验未运行，返回对照。',
 				assigned: '实验运行中，返回分配的变体。'
 			},
-			notesTitle: '注意事项',
-			notesHint: '当前版本限制。',
+			notesTitle: '使用提示',
+			notesHint: '日常使用的小提醒。',
 			notes: {
-				inMemory: '存储为内存，重启即清空。',
-				decisionLogic: '当前决策逻辑总是选择第一个变体（权重/灰度待实现）。',
-				auditStub: '审计接口当前返回空结果（占位）。'
+				controlVariant: '为每个实验准备清晰的对照变体，便于回退。',
+				auditCheck: '重要变更后查看审计记录，确认结果符合预期。',
+				naming: '保持命名一致，方便团队协作与追踪。'
 			}
 		}
 	}

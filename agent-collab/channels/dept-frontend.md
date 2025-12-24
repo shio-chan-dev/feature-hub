@@ -85,3 +85,28 @@ Append-only.
     - Confirm if additional locales or localized backend error messages are required.
   status: open
   relates: []
+
+- timestamp: 2025-12-23T22:30:00+08:00
+  from: ai/frontend/rep-01
+  thread: feature-hub-frontend-polish
+  type: update
+  priority: P1
+  body: |
+    Deliverables:
+    - Header API display now uses API_BASE_URL host; brand links to home; back buttons keep navigation state.
+    - Feature detail supports name updates; experiment name updates; variant editing redesigned as inline cards.
+    - Audits page aligns to decision audit schema; feature autocomplete + quick picks; stub hint removed.
+    - Audit entry links added on feature list and feature detail pages.
+
+    Risks:
+    - Audits only appear after decisions; empty list could be misread as missing data.
+    - Feature suggestions rely on /features; if unavailable, autocomplete and quick picks fail.
+
+    Next steps:
+    - Smoke test flow: create feature/experiment/variant -> update -> trigger decision -> verify audit.
+    - Confirm audit fields and reason display expectations.
+
+    Support needed:
+    - Confirm desired audit field formatting and pagination behavior.
+  status: open
+  relates: []
