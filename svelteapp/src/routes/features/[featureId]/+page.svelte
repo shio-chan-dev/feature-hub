@@ -171,7 +171,7 @@
 				</div>
 			</div>
 			{#if isCreateExperimentOpen}
-				<div class="panel" transition:slide>
+				<div class="panel edit-panel" transition:slide>
 					<form method="POST" action="?/createExperiment" class="form-grid">
 						<label>
 							{copy.featureDetail.experimentForm.name}
@@ -197,16 +197,16 @@
 								{copy.featureDetail.experimentForm.create}
 							</button>
 							<span class="helper">{copy.featureDetail.experimentForm.helper}</span>
-						</div>
-					</form>
-					{#if form?.action === 'createExperiment'}
-						{#if form?.error}
+							</div>
+						</form>
+						{#if form?.action === 'createExperiment'}
+							{#if form?.error}
 							<p class="banner error" role="alert">{form.error}</p>
 						{:else if form?.success}
 							<p class="banner success">{copy.messages.experimentCreated}</p>
+							{/if}
 						{/if}
-					{/if}
-				</div>
+					</div>
 			{/if}
 
 			{#if data.experiments.length === 0}
@@ -250,53 +250,55 @@
 								</a>
 							</div>
 							{#if editingExperimentId === experiment.id}
-								<form method="POST" action="?/updateExperiment" class="form-grid" transition:slide>
-									<input type="hidden" name="experiment_id" value={experiment.id} />
-									<label>
-										{copy.featureDetail.experimentForm.name}
-										<input name="name" value={experiment.name} />
-									</label>
-									<label>
-										{copy.featureDetail.statusLabel}
-										<select name="status">
-											<option value="draft" selected={experiment.status === 'draft'}>
-												{copy.statuses.draft}
-											</option>
-											<option value="running" selected={experiment.status === 'running'}>
-												{copy.statuses.running}
-											</option>
-											<option value="paused" selected={experiment.status === 'paused'}>
-												{copy.statuses.paused}
-											</option>
-										</select>
-									</label>
-									<label>
-										{copy.featureDetail.experimentForm.rollout}
-										<input
-											type="number"
-											name="rollout_percent"
-											min="0"
-											max="100"
-											value={experiment.rollout_percent}
-										/>
-									</label>
-									<label>
-										{copy.featureDetail.experimentForm.seed}
-										<input name="seed" value={experiment.seed} />
-									</label>
-									<div class="form-actions">
-										<button class="button primary" type="submit">
-											{copy.featureDetail.experimentUpdate}
-										</button>
-									</div>
-								</form>
-								{#if form?.action === 'updateExperiment' && form?.experimentId === experiment.id}
-									{#if form?.error}
-										<p class="banner error" role="alert">{form.error}</p>
-									{:else if form?.success}
-										<p class="banner success">{copy.messages.experimentUpdated}</p>
+								<div class="edit-panel" transition:slide>
+									<form method="POST" action="?/updateExperiment" class="form-grid">
+										<input type="hidden" name="experiment_id" value={experiment.id} />
+										<label>
+											{copy.featureDetail.experimentForm.name}
+											<input name="name" value={experiment.name} />
+										</label>
+										<label>
+											{copy.featureDetail.statusLabel}
+											<select name="status">
+												<option value="draft" selected={experiment.status === 'draft'}>
+													{copy.statuses.draft}
+												</option>
+												<option value="running" selected={experiment.status === 'running'}>
+													{copy.statuses.running}
+												</option>
+												<option value="paused" selected={experiment.status === 'paused'}>
+													{copy.statuses.paused}
+												</option>
+											</select>
+										</label>
+										<label>
+											{copy.featureDetail.experimentForm.rollout}
+											<input
+												type="number"
+												name="rollout_percent"
+												min="0"
+												max="100"
+												value={experiment.rollout_percent}
+											/>
+										</label>
+										<label>
+											{copy.featureDetail.experimentForm.seed}
+											<input name="seed" value={experiment.seed} />
+										</label>
+										<div class="form-actions">
+											<button class="button primary" type="submit">
+												{copy.featureDetail.experimentUpdate}
+											</button>
+										</div>
+									</form>
+									{#if form?.action === 'updateExperiment' && form?.experimentId === experiment.id}
+										{#if form?.error}
+											<p class="banner error" role="alert">{form.error}</p>
+										{:else if form?.success}
+											<p class="banner success">{copy.messages.experimentUpdated}</p>
+										{/if}
 									{/if}
-								{/if}
+								</div>
 							{/if}
 						</article>
 					{/each}
@@ -359,41 +361,43 @@
 										</span>
 									</div>
 									{#if editingVariantId === variant.id}
-										<form method="POST" action="?/updateVariant" class="form-grid" transition:slide>
-											<input type="hidden" name="variant_id" value={variant.id} />
-											<label>
-												{copy.featureDetail.variantForm.weight}
-												<input type="number" name="weight" min="0" value={variant.weight} />
-											</label>
-											<label>
-												{copy.featureDetail.variantForm.control}
-												<select name="is_control">
-													<option value="true" selected={variant.is_control}>
-														{copy.common.yes}
-													</option>
-													<option value="false" selected={!variant.is_control}>
-														{copy.common.no}
-													</option>
-												</select>
-											</label>
-											<label>
-												{copy.featureDetail.variantForm.payload}
-												<textarea name="payload">{JSON.stringify(variant.payload, null, 2)}</textarea>
-											</label>
-											<div class="form-actions">
-												<button class="button primary" type="submit">
-													{copy.featureDetail.variantUpdateForm.submit}
-												</button>
-												<span class="helper">{copy.featureDetail.variantUpdateForm.helper}</span>
-											</div>
-										</form>
-										{#if form?.action === 'updateVariant' && form?.variantId === variant.id}
-											{#if form?.error}
-												<p class="banner error" role="alert">{form.error}</p>
-											{:else if form?.success}
-												<p class="banner success">{copy.messages.variantUpdated}</p>
+										<div class="edit-panel" transition:slide>
+											<form method="POST" action="?/updateVariant" class="form-grid variant-form">
+												<input type="hidden" name="variant_id" value={variant.id} />
+												<label>
+													{copy.featureDetail.variantForm.weight}
+													<input type="number" name="weight" min="0" value={variant.weight} />
+												</label>
+												<label>
+													{copy.featureDetail.variantForm.control}
+													<select name="is_control">
+														<option value="true" selected={variant.is_control}>
+															{copy.common.yes}
+														</option>
+														<option value="false" selected={!variant.is_control}>
+															{copy.common.no}
+														</option>
+													</select>
+												</label>
+												<label>
+													{copy.featureDetail.variantForm.payload}
+													<textarea name="payload">{JSON.stringify(variant.payload, null, 2)}</textarea>
+												</label>
+												<div class="form-actions">
+													<button class="button primary" type="submit">
+														{copy.featureDetail.variantUpdateForm.submit}
+													</button>
+													<span class="helper">{copy.featureDetail.variantUpdateForm.helper}</span>
+												</div>
+											</form>
+											{#if form?.action === 'updateVariant' && form?.variantId === variant.id}
+												{#if form?.error}
+													<p class="banner error" role="alert">{form.error}</p>
+												{:else if form?.success}
+													<p class="banner success">{copy.messages.variantUpdated}</p>
+												{/if}
 											{/if}
-										{/if}
+										</div>
 									{/if}
 								</article>
 							{/each}
@@ -401,8 +405,8 @@
 					{/if}
 				</div>
 				{#if isCreateVariantOpen}
-					<div class="panel" transition:slide>
-						<form method="POST" action="?/createVariant" class="form-grid">
+					<div class="panel edit-panel" transition:slide>
+						<form method="POST" action="?/createVariant" class="form-grid variant-form">
 							<input type="hidden" name="experiment_id" value={data.selectedExperiment.id} />
 							<label>
 								{copy.featureDetail.variantForm.key}

@@ -339,6 +339,34 @@ h1 {
 	box-shadow: 0 16px 36px rgba(28, 22, 14, 0.08);
 }
 
+.edit-panel {
+	background: linear-gradient(135deg, rgba(31, 127, 112, 0.08), rgba(242, 184, 128, 0.18));
+	border: 1px solid rgba(31, 127, 112, 0.18);
+	border-left: 4px solid var(--accent);
+	border-radius: var(--radius-md);
+	padding: 1.1rem 1.3rem;
+	box-shadow: 0 18px 30px rgba(31, 127, 112, 0.12);
+	display: grid;
+	gap: 0.9rem;
+}
+
+.panel.edit-panel {
+	padding: 1.4rem 1.6rem;
+	box-shadow: 0 20px 34px rgba(31, 127, 112, 0.14);
+}
+
+.edit-panel .form-grid {
+	gap: 0.85rem;
+}
+
+.edit-panel .form-actions {
+	margin-top: 0.1rem;
+}
+
+.edit-panel .banner {
+	margin-top: 0;
+}
+
 .form-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -388,6 +416,16 @@ textarea {
 
 .form-grid textarea {
 	grid-column: 1 / -1;
+}
+
+.form-grid.variant-form textarea {
+	grid-column: auto;
+	min-height: 48px;
+	font-family: 'SFMono-Regular', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+}
+
+.form-grid.variant-form {
+	align-items: start;
 }
 
 .helper {
