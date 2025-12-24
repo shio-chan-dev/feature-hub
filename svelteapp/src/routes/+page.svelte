@@ -14,7 +14,8 @@
 	const experimentCount = $derived(
 		data.features.filter((item) => item.status === 'experiment').length
 	);
-	const auditsHref = base ? `${base}/audits` : '/audits';
+	const withBase = (path: string) => (base ? `${base}${path}` : path);
+	const auditsHref = withBase('/audits');
 </script>
 
 <div class="container">
@@ -120,14 +121,17 @@
 						</div>
 						<!-- Actions: open feature detail or test decision -->
 						<div class="card-actions">
-							<a class="button" href={`/features/${feature.id}`}>{copy.common.open}</a>
+							<a class="button" href={withBase(`/features/${feature.id}`)}>{copy.common.open}</a>
 							<a
 								class="button ghost"
-								href={`/decisions?feature_key=${encodeURIComponent(feature.key)}`}
+								href={withBase(`/decisions?feature_key=${encodeURIComponent(feature.key)}`)}
 							>
 								{copy.features.tryDecision}
 							</a>
-							<a class="button ghost" href={`/audits?feature_id=${encodeURIComponent(feature.id)}`}>
+							<a
+								class="button ghost"
+								href={withBase(`/audits?feature_id=${encodeURIComponent(feature.id)}`)}
+							>
 								{copy.header.nav.audits}
 							</a>
 						</div>
