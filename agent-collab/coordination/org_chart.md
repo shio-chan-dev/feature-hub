@@ -8,6 +8,7 @@ Current structure (expand as needed):
       - ai/backend/engineer-01 (Backend Engineer)
       - ai/backend/engineer-02 (Backend Engineer)
     - ai/frontend/rep-01 (Frontend Rep)
+  - ai/marketing/manager-01 (Marketing Manager)
 
 Notes:
 - Keep agent IDs stable; if a role is handed over, reuse the same ID.

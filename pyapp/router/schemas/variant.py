@@ -15,3 +15,8 @@ class VariantOut(BaseModel):
     weight: int
     is_control: bool
     payload: Mapping[str, Any]
+
+class VariantPatch(BaseModel):
+    weight: int | None = None
+    is_control: bool | None = None
+    payload: Mapping[str, Any] | None = None

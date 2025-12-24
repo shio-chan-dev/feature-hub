@@ -74,13 +74,20 @@ def get_experiment(experiment_id: str):
 def patch_experiment(experiment_id: str, payload: ExperimentPatch):
     try:
         logger.info(
-                "[router.exp] patch_experiment start id=%s status=%s rollout_percent=%s seed=%s",
+                "[router.exp] patch_experiment start id=%s name=%s status=%s rollout_percent=%s seed=%s",
                 experiment_id,
+                payload.name,
                 payload.status,
                 payload.rollout_percent,
                 payload.seed,
                 )
-        exp = exp_svc.update(experiment_id, payload.status, payload.rollout_percent, payload.seed)
+        exp = exp_svc.update(
+                experiment_id,
+                payload.status,
+                payload.rollout_percent,
+                payload.seed,
+                payload.name,
+                )
         logger.info(
                 "[router.exp] patch_experiment success id=%s status=%s",
                 exp.id,

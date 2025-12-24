@@ -65,8 +65,9 @@ def get_feature(feature_id: str):
 def patch_feature(feature_id: str, payload: FeaturePatch):
     try:
         logger.info(
-                "[router.feat] patch_feature start id=%s status=%s active_experiment_id=%s",
+                "[router.feat] patch_feature start id=%s name=%s status=%s active_experiment_id=%s",
                 feature_id,
+                payload.name,
                 payload.status,
                 payload.active_experiment_id,
                 )
@@ -74,6 +75,7 @@ def patch_feature(feature_id: str, payload: FeaturePatch):
                 feature_id,
                 payload.status,
                 payload.active_experiment_id,
+                payload.name,
                 )
         logger.info(
                 "[router.feat] patch_feature success id=%s status=%s",

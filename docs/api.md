@@ -45,6 +45,7 @@
   * [Variant 接口](#variant-接口)
     * [POST /experiments/{experiment_id}/variants](#post-experimentsexperiment_idvariants)
     * [GET /experiments/{experiment_id}/variants](#get-experimentsexperiment_idvariants)
+    * [PATCH /variants/{variant_id}](#patch-variantsvariant_id)
   * [Decision 接口](#decision-接口)
     * [POST /decisions](#post-decisions)
   * [Audit 接口](#audit-接口)
@@ -129,6 +130,7 @@ BASE_URL=http://localhost:6789
 | --- | --- | --- |
 | POST | /experiments/{experiment_id}/variants | 创建 Variant |
 | GET | /experiments/{experiment_id}/variants | Variant 列表 |
+| PATCH | /variants/{variant_id} | 更新 Variant |
 
 ### Decision 接口概览
 | Method | Path | 说明 |
@@ -211,23 +213,28 @@ curl -sS "$BASE_URL/features/feat-001"
 ```
 
 #### PATCH /features/{feature_id}
-更新 Feature 状态与激活实验。
+更新 Feature（支持部分字段更新）。
 
-请求体:
+请求体（字段可选）:
 ```json
-{"status":"experiment","active_experiment_id":"exp-001"}
+{"name":"New Checkout v2","status":"experiment","active_experiment_id":"exp-001"}
 ```
+
+规则:
+- status=experiment 时必须提供 active_experiment_id
+- status 非 experiment 时会清空 active_experiment_id
+- 仅传 active_experiment_id 时要求当前 status=experiment
 
 curl:
 ```bash
 curl -sS -X PATCH "$BASE_URL/features/feat-001" \
   -H "Content-Type: application/json" \
-  -d '{"status":"experiment","active_experiment_id":"exp-001"}'
+  -d '{"name":"New Checkout v2","status":"experiment","active_experiment_id":"exp-001"}'
 ```
 
 响应示例:
 ```json
-{"id":"feat-001","key":"new_checkout","name":"New Checkout","status":"experiment","active_experiment_id":"exp-001"}
+{"id":"feat-001","key":"new_checkout","name":"New Checkout v2","status":"experiment","active_experiment_id":"exp-001"}
 ```
 
 ### Experiment 接口
@@ -281,23 +288,23 @@ curl -sS "$BASE_URL/experiments/exp-001"
 ```
 
 #### PATCH /experiments/{experiment_id}
-更新 Experiment。
+更新 Experiment（支持部分字段更新）。
 
 请求体（字段可选）:
 ```json
-{"status":"running","rollout_percent":50,"seed":"2024q4"}
+{"name":"checkout-test-v2","status":"running","rollout_percent":50,"seed":"2024q4"}
 ```
 
 curl:
 ```bash
 curl -sS -X PATCH "$BASE_URL/experiments/exp-001" \
   -H "Content-Type: application/json" \
-  -d '{"status":"running","rollout_percent":50,"seed":"2024q4"}'
+  -d '{"name":"checkout-test-v2","status":"running","rollout_percent":50,"seed":"2024q4"}'
 ```
 
 响应示例:
 ```json
-{"id":"exp-001","feature_id":"feat-001","name":"checkout-test","seed":"2024q4","status":"running","rollout_percent":50}
+{"id":"exp-001","feature_id":"feat-001","name":"checkout-test-v2","seed":"2024q4","status":"running","rollout_percent":50}
 ```
 
 ### Variant 接口
@@ -335,6 +342,29 @@ curl -sS "$BASE_URL/experiments/exp-001/variants"
 [
   {"id":"var-001","experiment_id":"exp-001","key":"control","weight":50,"is_control":true,"payload":{}}
 ]
+```
+
+#### PATCH /variants/{variant_id}
+更新 Variant（支持部分字段更新）。
+
+路径参数:
+- variant_id: Variant ID
+
+请求体（字段可选）:
+```json
+{"weight":60,"is_control":false,"payload":{"ui":"v2"}}
+```
+
+curl:
+```bash
+curl -sS -X PATCH "$BASE_URL/variants/var-001" \
+  -H "Content-Type: application/json" \
+  -d '{"weight":60,"is_control":false,"payload":{"ui":"v2"}}'
+```
+
+响应示例:
+```json
+{"id":"var-001","experiment_id":"exp-001","key":"control","weight":60,"is_control":false,"payload":{"ui":"v2"}}
 ```
 
 ### Decision 接口

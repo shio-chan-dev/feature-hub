@@ -36,3 +36,77 @@ Append-only.
     - Open questions: targeting format, audit log fields/source, bucket key (layer_id?), log retention
   status: open
   relates: []
+
+- timestamp: 2025-12-22T17:55:00+08:00
+  from: ai/frontend/rep-01
+  thread: feature-hub-ui
+  type: update
+  priority: P1
+  body: |
+    Deliverables:
+    - SvelteKit UI implemented: Features dashboard, Feature detail (experiments + variants), Audits, Decisions playground.
+    - Unified Header + global layout/theme + motion/a11y polish.
+    - Server loads/actions wired to API contract; centralized api client + types.
+    - Fixed Svelte 5 runes mode ($derived) and CSS @import ordering (fonts moved to <head>).
+
+    Risks:
+    - Google Fonts served via external URL; if blocked, typography will fall back.
+    - API base defaults to http://localhost:6789; ensure backend is running or set API_BASE_URL.
+
+    Next steps:
+    - Run dev server, smoke test flows: create feature -> create experiment -> add variants -> set status -> decision.
+    - Validate audits page once backend stub is replaced.
+
+    Support needed:
+    - Confirm API availability/port, and any env var standard for API_BASE_URL.
+  status: open
+  relates: []
+
+- timestamp: 2025-12-22T18:12:00+08:00
+  from: ai/frontend/rep-01
+  thread: feature-hub-i18n-docs
+  type: update
+  priority: P1
+  body: |
+    Deliverables:
+    - Added language switcher (EN/中文) via cookie + SSR locale resolution; labels localized across pages.
+    - Implemented /set-locale endpoint; removed invalid actions export from +layout.server.ts.
+    - Docs page expanded with service-integration guidance + decision routing example.
+
+    Risks:
+    - Language switch relies on POST /set-locale; ensure route is deployed.
+    - External Google Fonts dependency remains; fallback ok if blocked.
+
+    Next steps:
+    - Smoke test locale switching and verify all pages render after language toggle.
+    - Confirm backend API URL/port used in docs samples.
+
+    Support needed:
+    - Confirm if additional locales or localized backend error messages are required.
+  status: open
+  relates: []
+
+- timestamp: 2025-12-23T22:30:00+08:00
+  from: ai/frontend/rep-01
+  thread: feature-hub-frontend-polish
+  type: update
+  priority: P1
+  body: |
+    Deliverables:
+    - Header API display now uses API_BASE_URL host; brand links to home; back buttons keep navigation state.
+    - Feature detail supports name updates; experiment name updates; variant editing redesigned as inline cards.
+    - Audits page aligns to decision audit schema; feature autocomplete + quick picks; stub hint removed.
+    - Audit entry links added on feature list and feature detail pages.
+
+    Risks:
+    - Audits only appear after decisions; empty list could be misread as missing data.
+    - Feature suggestions rely on /features; if unavailable, autocomplete and quick picks fail.
+
+    Next steps:
+    - Smoke test flow: create feature/experiment/variant -> update -> trigger decision -> verify audit.
+    - Confirm audit fields and reason display expectations.
+
+    Support needed:
+    - Confirm desired audit field formatting and pagination behavior.
+  status: open
+  relates: []

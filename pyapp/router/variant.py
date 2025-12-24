@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 
 from domain.variant import Variant
-from router.schemas.variant import VariantCreate, VariantOut
+from router.schemas.variant import VariantCreate, VariantOut, VariantPatch
 from services.variant import var_svc
 from utils.logger import logger
 
@@ -49,6 +49,43 @@ def list_variants(experiment_id: str):
             len(variants),
             )
     return [_out(v) for v in variants]
+
+@router.patch("/variants/{variant_id}", response_model=VariantOut)
+def patch_variant(variant_id: str, payload: VariantPatch):
+    try:
+        logger.info(
+                "[router.var] patch variant start id=%s weight=%s is_control=%s payload=%s",
+                variant_id,
+                payload.weight,
+                payload.is_control,
+                payload.payload,
+                )
+        updated = var_svc.update(
+                variant_id=variant_id,
+                weight=payload.weight,
+                is_control=payload.is_control,
+                payload=payload.payload,
+                )
+        logger.info(
+                "[router.var] patch variant success id=%s key=%s payload=%s",
+                updated.id,
+                updated.key,
+                updated.payload
+                )
+        return VariantOut(
+                id=updated.id,
+                experiment_id=updated.experiment_id,
+                key=updated.key,
+                weight=updated.weight,
+                is_control=updated.is_control,
+                payload=updated.payload
+                )
+    except Exception as e:
+        logger.info("[router.var] patch variant error id=%s err=%s", variant_id, e)
+        raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"update variant failed err={e}",
+                )
 
 def _out(var: Variant) -> VariantOut:
     return VariantOut(
