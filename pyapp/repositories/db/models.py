@@ -103,6 +103,8 @@ class DecisionORM(Base):
             )
     id = Column(String(64), primary_key=True, comment="Primary key")
     request_id = Column(String(64), nullable=False, comment="Idempotency request id")
+    feature_id = Column(String(64), nullable=False, index=True, comment="Feature id")
+    feature_key = Column(String(128), nullable=False, index=True, comment="Feature key")
     experiment_id = Column(
             String(64),
             ForeignKey("experiments.id", name="fk_decision_experiment_id"),
@@ -118,6 +120,8 @@ class DecisionORM(Base):
             index=True,
             comment="Variant id",
             )
+    variant_key = Column(String(64), nullable=False, comment="Variant key")
+    variant_payload = Column(JSONField, nullable=False, comment="Variant payload JSON")
     reason = Column(String(32), nullable=False, comment="Decision reason")
     decided_at = Column(
             DateTime, 
