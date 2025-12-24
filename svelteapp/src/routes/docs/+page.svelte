@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { defaultLocale, format, translations } from '$lib/i18n';
+	import { base } from '$app/paths';
 
 	let { data } = $props();
 
@@ -7,6 +8,7 @@
 	const copy = $derived(translations[currentLocale]);
 	const apiBaseUrl = $derived(data.apiBaseUrl.replace(/\/$/, ''));
 	const docsUrl = $derived(`${apiBaseUrl}/docs`);
+	const rootPath = base || '/';
 	const quickStartSteps = $derived([
 		format(copy.docs.quickStartSteps.start, {
 			apiBaseUrl: `<code>${apiBaseUrl}</code>`
@@ -52,7 +54,7 @@
 			<h1>{copy.docs.title}</h1>
 			<p class="lead">{copy.docs.lead}</p>
 			<div class="tag-row">
-				<a class="button primary" href="/">{copy.docs.openFeatures}</a>
+				<a class="button primary" href={rootPath}>{copy.docs.openFeatures}</a>
 				<a class="button ghost" href={docsUrl}>{copy.docs.apiReference}</a>
 			</div>
 		</div>
