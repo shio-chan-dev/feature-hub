@@ -7,7 +7,6 @@
 	const currentLocale = $derived(data.locale ?? defaultLocale);
 	const copy = $derived(translations[currentLocale]);
 	const apiBaseUrl = $derived(data.apiBaseUrl.replace(/\/$/, ''));
-	const docsUrl = $derived(`${apiBaseUrl}/docs`);
 	const rootPath = base || '/';
 	const quickStartSteps = $derived([
 		format(copy.docs.quickStartSteps.start, {
@@ -55,17 +54,12 @@
 			<p class="lead">{copy.docs.lead}</p>
 			<div class="tag-row">
 				<a class="button primary" href={rootPath}>{copy.docs.openFeatures}</a>
-				<a class="button ghost" href={docsUrl}>{copy.docs.apiReference}</a>
 			</div>
 		</div>
 		<div class="hero-panel reveal" style="--delay: 0.1s">
 			<div class="metric">
 				<span class="metric-label">{copy.docs.apiBaseUrl}</span>
 				<span class="metric-value" style="font-size: 1.4rem">{apiBaseUrl}</span>
-			</div>
-			<div class="metric">
-				<span class="metric-label">{copy.docs.interactiveDocs}</span>
-				<a class="button" href={docsUrl}>{copy.docs.openDocs}</a>
 			</div>
 		</div>
 	</section>
@@ -81,31 +75,6 @@
 					<li>{@html step}</li>
 				{/each}
 			</ol>
-		</div>
-	</section>
-
-	<section class="section">
-		<div class="section-header">
-			<h2 class="section-title">{copy.docs.capabilitiesTitle}</h2>
-			<span class="subtle">{copy.docs.capabilitiesHint}</span>
-		</div>
-		<div class="feature-grid">
-			<div class="card">
-				<div class="card-title">{copy.docs.cards.featureLifecycle.title}</div>
-				<p class="card-meta">{copy.docs.cards.featureLifecycle.body}</p>
-			</div>
-			<div class="card">
-				<div class="card-title">{copy.docs.cards.experimentControl.title}</div>
-				<p class="card-meta">{copy.docs.cards.experimentControl.body}</p>
-			</div>
-			<div class="card">
-				<div class="card-title">{copy.docs.cards.variantSetup.title}</div>
-				<p class="card-meta">{copy.docs.cards.variantSetup.body}</p>
-			</div>
-			<div class="card">
-				<div class="card-title">{copy.docs.cards.decisionPreview.title}</div>
-				<p class="card-meta">{copy.docs.cards.decisionPreview.body}</p>
-			</div>
 		</div>
 	</section>
 

@@ -180,7 +180,7 @@ export const translations = {
 			eyebrow: 'Documentation',
 			title: 'How to use Feature Hub',
 			lead:
-				'This console manages feature flags and experiments. Use the flow below to create features, configure experiments, and validate decisions against the live API.',
+				'Use the decision API to resolve which variant to serve. Feature and experiment setup is handled inside the console.',
 			openFeatures: 'Open features',
 			apiReference: 'API reference',
 			apiBaseUrl: 'API base URL',
@@ -189,14 +189,12 @@ export const translations = {
 			quickStartTitle: 'Quick start',
 			quickStartHint: 'Follow this once per environment.',
 			quickStartSteps: {
-				start: 'Start the API server at {apiBaseUrl}.',
-				runApp: 'Run the Svelte app with {command} in {appDir}.',
-				createFeature: 'Create a feature, then add an experiment under it.',
-				addVariants:
-					'Add variants (control required), set rollout percent, and mark status running.',
-				activateExperiment:
-					'Switch the feature to experiment and choose the active experiment.',
-				validateDecision: 'Use the Decisions page to validate the payload returned.'
+				start: 'Use {apiBaseUrl} as the base URL for decision requests.',
+				runApp: 'Confirm your feature_key and user_id source with your team.',
+				createFeature: 'POST /decisions with request_id, feature_key, user_id, and optional context.',
+				addVariants: 'Route traffic using variant_key or variant_payload from the response.',
+				activateExperiment: 'Log request_id and reason to help debugging.',
+				validateDecision: 'Handle fallback states based on the decision reason.'
 			},
 			capabilitiesTitle: 'What you can do',
 			capabilitiesHint: 'Feature-first workflow aligned to the API.',
@@ -412,7 +410,7 @@ export const translations = {
 		docs: {
 			eyebrow: '使用文档',
 			title: 'Feature Hub 使用说明',
-			lead: '该控制台用于管理功能与实验，请按下列流程创建功能、配置实验并验证决策。',
+			lead: '使用决策接口获取应返回的变体，功能与实验配置由控制台统一管理。',
 			openFeatures: '打开功能列表',
 			apiReference: 'API 文档',
 			apiBaseUrl: 'API 基础地址',
@@ -421,12 +419,12 @@ export const translations = {
 			quickStartTitle: '快速开始',
 			quickStartHint: '每个环境执行一次。',
 			quickStartSteps: {
-				start: '启动 API 服务：{apiBaseUrl}',
-				runApp: '在 {appDir} 目录运行 {command}',
-				createFeature: '创建功能，并在其下创建实验。',
-				addVariants: '添加变体（需包含对照），设置灰度比例，并将状态设为 running。',
-				activateExperiment: '将功能状态切换为 experiment 并选择当前实验。',
-				validateDecision: '使用决策页验证返回的 payload。'
+				start: '使用 {apiBaseUrl} 作为决策请求的基础地址。',
+				runApp: '确认 feature_key 与 user_id 的来源与规范。',
+				createFeature: '调用 POST /decisions，提交 request_id、feature_key、user_id 和可选 context。',
+				addVariants: '根据返回的 variant_key 或 variant_payload 做路由控制。',
+				activateExperiment: '记录 request_id 与 reason 便于排查问题。',
+				validateDecision: '根据 reason 处理回退与灰度状态。'
 			},
 			capabilitiesTitle: '你可以做什么',
 			capabilitiesHint: '与 API 对齐的 Feature-first 流程。',
