@@ -1,4 +1,3 @@
-AGENTS.template.md
 概述
 
 本文件是项目级 AGENTS 规范模板，用于定义多智能体在技术项目中的协作方式与权限边界。
@@ -53,6 +52,7 @@ AGENTS.template.md
 - 选择唯一 ID（推荐 ai/<dept>/rep-01 或 ai/<dept>/<n>）。
 - 从 templates/role/ 复制为 agents/<id>/。
 - 替换文件内的 ID 与角色信息。
+- 在 agents/<id>/ 下创建空的 AGENTS.md（由负责人后续注入角色规范）。
 - 人类角色使用 agents/human/<name>/。
 - 在部门频道公告加入。
 - 如果是代表角色，必须在 global + leadership 频道公告。
