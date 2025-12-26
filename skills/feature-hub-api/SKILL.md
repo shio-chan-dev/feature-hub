@@ -36,4 +36,5 @@ description: Use this skill to help customers integrate with Feature Hub (featur
 
 ## References
 - `docs/api.md`
+- `skills/feature-hub-api/references/api.md`
 - `skills/feature-hub-api/references/decision.md`

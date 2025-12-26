@@ -152,3 +152,17 @@ Append-only.
     - 确认允许修复 models/init 文件，并确认最终版本表名称（当前为 feature_alembic_version）。
   status: open
   relates: ["pyapp/migration/env.py"]
+
+- timestamp: 2025-12-25T15:28:31+08:00
+  from: ai/backend/rep-01
+  thread: experiment-platform-positioning
+  type: discussion
+  priority: P2
+  body: |
+    讨论记录：实验平台定位与适用场景
+    - 平台定位：应用层实验/灰度决策系统（给出“本次请求走哪个版本/模型”的决策）。
+    - 可用场景：后端不同语言版本（Flask vs FastAPI）与 AI 模型版本对比均适用。
+    - 不覆盖：部署/发布流水线、基础设施层灰度、自动回滚与指标分析体系。
+    - 未决问题：后续要继续停留在“应用层决策”，还是扩展为“发布系统/自动化回滚平台”。
+  status: noted
+  relates: []
