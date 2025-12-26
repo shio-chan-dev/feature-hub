@@ -52,5 +52,5 @@ def decide(payload: DecisionRequest):
                 )
         raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"觉得用户使用方案失败 {str(e)}"
+                detail=f"用户调用决策接口失败 {str(e)}"
                 )
