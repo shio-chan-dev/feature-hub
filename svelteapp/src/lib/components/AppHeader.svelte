@@ -4,6 +4,7 @@
 	import { base } from '$app/paths';
 	// Localization helpers and types.
 	import { defaultLocale, localeLabels, locales, translations, type Locale } from '$lib/i18n';
+	import logo from '$lib/assets/logo.png';
 
 	// Props injected by the root layout.
 	// - locale: current UI language
@@ -60,8 +61,11 @@
 <header class="app-header">
 	<!-- Brand / product identity -->
 	<a class="brand" href={rootPath}>
-		<div class="brand-title">{copy.header.brandTitle}</div>
-		<div class="brand-subtitle">{copy.header.brandSubtitle}</div>
+		<img class="brand-mark" src={logo} alt="Feature Hub logo" />
+		<div class="brand-text">
+			<div class="brand-title">{copy.header.brandTitle}</div>
+			<div class="brand-subtitle">{copy.header.brandSubtitle}</div>
+		</div>
 	</a>
 
 	<!-- Primary navigation -->
