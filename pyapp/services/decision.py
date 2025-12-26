@@ -37,6 +37,7 @@ class DecisionService:
         )
 
         logger.debug("[svc.dec] check existing decision request_id=%s", request_id)
+        # 如果出现了同样的request，走一样的分流进行返回
         existing = self._dec_table.get_by_request_id(request_id)
         if existing:
             logger.info(

@@ -8,7 +8,7 @@
 - 认证: 无
 - 返回格式: JSON
 - 版本: 0.1.0
-- 存储: 数据库（默认 SQLite，可通过 DB_TYPE 切换 MySQL）
+- 存储: 内存（重启即丢）
 
 
 ## 目录
@@ -85,7 +85,7 @@
 - experiment_id: string | null
 - variant_key: string
 - variant_payload: object
-- reason: feature_off | feature_on | experiment_inactive | not in rollout | assigned
+- reason: feature_off | feature_on | experiment_inactive | assigned
 
 ## 通用响应与错误
 - 成功: 200
@@ -140,7 +140,7 @@ BASE_URL=http://localhost:6789
 ### Audit 接口概览
 | Method | Path | 说明 |
 | --- | --- | --- |
-| GET | /audits | 审计查询 |
+| GET | /audits | 审计查询（stub） |
 
 ## 接口详情
 
@@ -380,10 +380,8 @@ curl -sS -X PATCH "$BASE_URL/variants/var-001" \
 行为说明:
 - feature.status = off → reason=feature_off, variant_key=control
 - feature.status = on → reason=feature_on, variant_key=enabled
-- experiment 未激活/非 running → reason=experiment_inactive, variant_key=control
-- running → 先做 rollout 分桶，未命中返回 reason=not in rollout + variant_key=control
-- rollout 命中 → 按 weight 权重选择 variant，reason=assigned
-- request_id 幂等：同一个 request_id 会返回首次决定结果
+- experiment 未激活/非 running → reason=experiment_inactive
+- running → 选择第一个 variant, reason=assigned
 
 curl:
 ```bash
@@ -400,7 +398,7 @@ curl -sS -X POST "$BASE_URL/decisions" \
 ### Audit 接口
 
 #### GET /audits
-审计查询（返回决策审计记录）。
+审计查询（当前为 stub）。
 
 查询参数:
 - feature_id: Feature ID (必填)
@@ -414,24 +412,10 @@ curl -sS "$BASE_URL/audits?feature_id=feat-001&limit=50"
 
 响应示例:
 ```json
-{
-  "items": [
-    {
-      "id": "dec-001",
-      "request_id": "req-001",
-      "feature_id": "feat-001",
-      "feature_key": "new_checkout",
-      "experiment_id": "exp-001",
-      "user_id": "u-123",
-      "variant_key": "control",
-      "variant_payload": {},
-      "reason": "assigned",
-      "decided_at": "2025-12-22T12:00:00Z"
-    }
-  ],
-  "next_cursor": null
-}
+{"items":[],"next_cursor":null}
 ```
 
 ## 已知限制
-- 审计记录依赖 /decisions 写入，调用 /decisions 后才可查询到记录。
+- 数据存储为内存，重启即丢。
+- 决策逻辑当前不应用 rollout_percent、weight、seed，仅返回第一个 variant。
+- /audits 返回空结果（stub）。
