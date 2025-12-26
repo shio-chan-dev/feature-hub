@@ -126,6 +126,18 @@ button {
 
 .brand {
 	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.brand-mark {
+	width: 36px;
+	height: 36px;
+	object-fit: contain;
+}
+
+.brand-text {
+	display: flex;
 	flex-direction: column;
 	gap: 0.25rem;
 }
