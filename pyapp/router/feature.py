@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from starlette.status import HTTP_404_NOT_FOUND
 
 from domain.feature import Feature
 from router.schemas.feature import FeatureCreate, FeatureOut, FeaturePatch
 from services.feature import feat_svc
+from utils.errors import ValidationError
 from utils.logger import logger
 
 
@@ -37,9 +38,18 @@ def create_feature(payload: FeatureCreate):
                 )
 
 @router.get("/features", response_model=list[FeatureOut])
-def list_features():
+def list_features(
+    status_filter: str | None = Query(None, alias="status"),
+    limit: int = 200,
+):
     logger.info("[router.feat] list_features start")
-    features = feat_svc.list()
+    try:
+        features = feat_svc.list(status=status_filter, limit=limit)
+    except ValidationError as exc:
+        raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"invalid query {exc}",
+                )
     logger.info("[router.feat] list_features success count=%s", len(features))
     return [_out(f) for f in features]
 

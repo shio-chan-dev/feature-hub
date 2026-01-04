@@ -30,8 +30,19 @@ class FeatureService:
                 )
         return self._table.create(feat)
 
-    def list(self) -> list[Feature]:
-        return list(self._table.list())
+    def list(self, status: str | None = None, limit: int | None = None) -> list[Feature]:
+        items = list(self._table.list())
+        if status is not None:
+            try:
+                status_enum = FeatureStatus(status)
+            except ValueError:
+                raise ValidationError("invalid_status")
+            items = [item for item in items if item.status == status_enum]
+        if limit is not None:
+            if limit <= 0:
+                raise ValidationError("limit_range")
+            items = items[:limit]
+        return items
 
     def update(
         self,

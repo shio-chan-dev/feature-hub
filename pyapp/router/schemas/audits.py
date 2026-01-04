@@ -4,16 +4,20 @@ from pydantic import BaseModel
 
 class AuditItem(BaseModel):
     id: str
+    decided_at: datetime
     request_id: str
+    user_id: str
     feature_id: str
     feature_key: str
+    feature_name: str | None
     experiment_id: str | None
-    user_id: str
+    experiment_name: str | None
+    variant_id: str | None
     variant_key: str
-    variant_payload: dict
+    is_control: bool | None
     reason: str
-    decided_at: datetime
+    variant_payload: dict | None
 
 class AuditListResponse(BaseModel):
-    items:list[AuditItem]
+    items: list[AuditItem]
     next_cursor: str | None

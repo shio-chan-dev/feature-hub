@@ -20,6 +20,8 @@
   * [Experiment](#experiment)
   * [Variant](#variant)
   * [DecisionResponse](#decisionresponse)
+  * [AuditItem](#audititem)
+  * [AuditListResponse](#auditlistresponse)
 * [通用响应与错误](#通用响应与错误)
 * [测试准备](#测试准备)
 * [接口一览](#接口一览)
@@ -85,7 +87,27 @@
 - experiment_id: string | null
 - variant_key: string
 - variant_payload: object
-- reason: feature_off | feature_on | experiment_inactive | not in rollout | assigned
+- reason: string（常见：feature_off | feature_on | experiment_inactive | not in rollout | assigned）
+
+### AuditItem
+- id: string，例：dec-001
+- decided_at: datetime（ISO 8601）
+- request_id: string
+- user_id: string
+- feature_id: string
+- feature_key: string
+- feature_name: string | null
+- experiment_id: string | null
+- experiment_name: string | null
+- variant_id: string | null
+- variant_key: string
+- is_control: bool | null
+- reason: string
+- variant_payload: object | null（include_payload=false 时为 null）
+
+### AuditListResponse
+- items: AuditItem[]
+- next_cursor: string | null（base64 游标）
 
 ## 通用响应与错误
 - 成功: 200
@@ -184,9 +206,18 @@ curl -sS -X POST "$BASE_URL/features" \
 #### GET /features
 获取 Feature 列表。
 
+查询参数:
+- status: off | on | experiment（可选）
+- limit: 默认 200，>0
+
 curl:
 ```bash
 curl -sS "$BASE_URL/features"
+```
+
+过滤示例:
+```bash
+curl -sS "$BASE_URL/features?status=experiment&limit=50"
 ```
 
 响应示例:
@@ -404,12 +435,25 @@ curl -sS -X POST "$BASE_URL/decisions" \
 
 查询参数:
 - feature_id: Feature ID (必填)
-- limit: 默认 50
-- cursor: 分页游标（可选）
+- cursor: 分页游标（可选，base64({"offset":N})，兼容纯数字 offset）
+- limit: 默认 50，>0
+- experiment_id: Experiment ID（可选）
+- variant_id: Variant ID（可选，且与 variant_key 互斥）
+- variant_key: Variant key（可选，且与 variant_id 互斥）
+- reason: string（可多次传入，按字符串过滤）
+- user_id: 用户 ID（可选）
+- request_id: 请求 ID（可选）
+- from: 起始时间（ISO 8601，可选）
+- to: 结束时间（ISO 8601，可选）
+- include_payload: 是否返回 variant_payload（默认 true，false 时返回 null）
+
+校验规则:
+- variant_id 与 variant_key 互斥
+- from 不得晚于 to
 
 curl:
 ```bash
-curl -sS "$BASE_URL/audits?feature_id=feat-001&limit=50"
+curl -sS "$BASE_URL/audits?feature_id=feat-001&reason=assigned&reason=feature_off&from=2025-12-01T00:00:00Z&to=2025-12-31T23:59:59Z&limit=20&include_payload=false"
 ```
 
 响应示例:
@@ -418,18 +462,22 @@ curl -sS "$BASE_URL/audits?feature_id=feat-001&limit=50"
   "items": [
     {
       "id": "dec-001",
+      "decided_at": "2025-12-22T12:00:00Z",
       "request_id": "req-001",
+      "user_id": "u-123",
       "feature_id": "feat-001",
       "feature_key": "new_checkout",
+      "feature_name": "New Checkout",
       "experiment_id": "exp-001",
-      "user_id": "u-123",
+      "experiment_name": "checkout-test",
+      "variant_id": "var-001",
       "variant_key": "control",
-      "variant_payload": {},
-      "reason": "assigned",
-      "decided_at": "2025-12-22T12:00:00Z"
+      "is_control": true,
+      "variant_payload": null,
+      "reason": "assigned"
     }
   ],
-  "next_cursor": null
+  "next_cursor": "eyJvZmZzZXQiOjIwfQ=="
 }
 ```
 

@@ -1,4 +1,5 @@
 import hashlib
+from dataclasses import asdict
 from datetime import datetime, timezone
 from domain.decisions import DecisionAudit
 from domain.experiment import ExperimentStatus
@@ -10,7 +11,7 @@ from services.variant import var_svc
 from repositories.decisions import dec_table
 from utils.errors import ValidationError
 from utils.logger import logger
-from utils.misc import new_id
+from utils.misc import decode_cursor, encode_cursor, new_id
 
 
 class DecisionService:
@@ -169,21 +170,57 @@ class DecisionService:
         logger.debug("[svc.dec] bucket result value=%s", value)
         return value
 
-    def list_audits(self, feature_id: str, limit: int, cursor: str | None) -> dict:
+    def list_audits(
+        self,
+        feature_id: str,
+        limit: int,
+        cursor: str | None,
+        experiment_id: str | None = None,
+        variant_id: str | None = None,
+        variant_key: str | None = None,
+        reasons: list[str] | None = None,
+        user_id: str | None = None,
+        request_id: str | None = None,
+        from_ts: datetime | None = None,
+        to_ts: datetime | None = None,
+        include_payload: bool = True,
+    ) -> dict:
         logger.info(
             "[svc.dec] list_audits start feature_id=%s limit=%s cursor=%s",
             feature_id,
             limit,
             cursor,
         )
-        items, next_cursor = self._dec_table.list_by_feature(feature_id, limit, cursor)
+        if limit <= 0:
+            raise ValidationError("limit_range")
+        try:
+            offset = decode_cursor(cursor)
+        except Exception as exc:
+            raise ValidationError(f"invalid_cursor {exc}")
+        items, next_offset = self._dec_table.list_by_feature(
+            feature_id=feature_id,
+            limit=limit,
+            offset=offset,
+            experiment_id=experiment_id,
+            variant_id=variant_id,
+            variant_key=variant_key,
+            reasons=reasons,
+            user_id=user_id,
+            request_id=request_id,
+            from_ts=from_ts,
+            to_ts=to_ts,
+        )
+        if not include_payload:
+            for item in items:
+                item.variant_payload = None
+        next_cursor = encode_cursor(next_offset) if next_offset is not None else None
         logger.info(
             "[svc.dec] list_audits success feature_id=%s count=%s next_cursor=%s",
             feature_id,
             len(items),
             next_cursor,
         )
-        return {"items": items, "next_cursor": next_cursor}
+        return {"items": [asdict(item) for item in items], "next_cursor": next_cursor}
 
     # 选择变量
     def _choose_variant(self, seed: str, user_id: str, exp_id: str, variants: list[Variant]) -> Variant:
